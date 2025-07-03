@@ -3,6 +3,11 @@ import bcrypt from "bcrypt";
 
 export async function createUser(name, phone, password) {
     const hashed  = await bcrypt.hash(password, 10);
+            
+    if (!password && !typeof password !== 'string') {
+         return res.status(400).json({ message: 'Password must be a string' });
+        }
+        
     console.log('password to hash:', password, typeof password);
     const [result] = await pool.query(
         `INSERT INTO user (name, phone, password) VALUES(?, ?, ?)`,
