@@ -5,9 +5,9 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import http from "http";
 import { Server  } from "socket.io";
-import authRoutes from "./authRoutes.js";
-import chatRoutes from "./chatRoutes.js";
-import postRoutes from "./postRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+// import chatRoutes from "./chatRoutes.js";
+// import postRoutes from "./postRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -36,8 +36,8 @@ app.use(session({
 }));
 
 app.use('/api/auth', authRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/posts', postRoutes);
+// app.use('/api/chat', chatRoutes);
+// app.use('/api/posts', postRoutes);
 
 const users = {};
 

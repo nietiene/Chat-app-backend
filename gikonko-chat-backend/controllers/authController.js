@@ -18,7 +18,7 @@ export async function register (req, res) {
      }
 }
 
-export async function login() {
+export async function login(req, res) {
     try {
         const { phone, password } = req.body;
         const user = await findUserByPhone(phone);
