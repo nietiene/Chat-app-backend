@@ -64,5 +64,12 @@ io.on('connection', (socket) => {
                 break;
             }
         }
-    })
+        console.log("User disconected", socket.id);
+    });
+
 });
+
+const PORT = process.env.PORT
+server.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`);
+})
