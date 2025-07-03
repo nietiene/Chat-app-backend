@@ -48,4 +48,8 @@ io.on('connection', (socket) => {
         users[username] = socket.id;
         io.emit("userList", Object.keys(users));
     });
+
+    socket.on("privateMessage", ({ to, message }) => {
+        const toTargetSocketId = users[to];
+    })
 });
