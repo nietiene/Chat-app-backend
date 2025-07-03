@@ -51,5 +51,16 @@ io.on('connection', (socket) => {
 
     socket.on("privateMessage", ({ to, message }) => {
         const toTargetSocketId = users[to];
+        if (toTargetSocketId) {
+            io.to(toTargetSocketId).emit("privateMessage", { from, message })
+        }
+    })
+
+    socket.on("disconnect", () => {
+        for (const username in users) {
+            if (users[username] = users[to]) {
+                
+            }
+        }
     })
 });
