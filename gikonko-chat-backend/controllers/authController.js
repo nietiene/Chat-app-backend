@@ -38,5 +38,19 @@ export async function login() {
             phone: user.phone,
             role: user.role
         }
+
+        res.json({ message: "Login successfully", user: req.session.user });    
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({ message: 'Server error' });
     }
 } 
+
+
+export function logout (req, res) {
+    req.session.destroy(() => {
+        res.json({ message: 'Logged out' });
+    });
+}
+
+export 
