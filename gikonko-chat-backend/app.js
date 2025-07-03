@@ -33,4 +33,11 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
-}))
+}));
+
+app.use('/api/auth', authRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/posts', postRoutes);
+
+const users = {};
+
