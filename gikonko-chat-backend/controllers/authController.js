@@ -13,6 +13,8 @@ export async function register (req, res) {
             await createUser(name, phone, password);
             res.json({ message: 'Registration successfully' });
      } catch (err) {
-        
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
      }
 }
+
