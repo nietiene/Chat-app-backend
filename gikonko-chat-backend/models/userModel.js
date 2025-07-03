@@ -7,5 +7,10 @@ export async function createUser(name, phone, password) {
         `INSERT INTO user (name, phone, role, password) VALUES(?, ?, ?)`,
         [name, phone, password]
     );
-    return result.insertId
+    return result.insertId;
+}
+
+export async function findUserByPhone(phone) {
+    const [rows] = await pool.query('SELECT * FROM user WHERE phone = ?', [phone]);
+    return rows[0];
 }
