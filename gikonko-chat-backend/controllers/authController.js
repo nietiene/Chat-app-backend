@@ -33,7 +33,10 @@ export async function login() {
         }
 
         req.session.user = {
-            id: user.user_id
+            id: user.user_id,
+            name: user.name,
+            phone: user.phone,
+            role: user.role
         }
     }
 } 
