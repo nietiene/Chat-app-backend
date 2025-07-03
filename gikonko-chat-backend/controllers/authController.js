@@ -18,3 +18,22 @@ export async function register (req, res) {
      }
 }
 
+export async function login() {
+    try {
+        const { phone, password } = req.body;
+        const user = await findUserByPhone(phone);
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+             return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        req.session.user = {
+            id: user.user_id
+        }
+    }
+} 
