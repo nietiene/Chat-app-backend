@@ -7,8 +7,12 @@ export async function register (req, res) {
         const existingUser = await findUserByPhone(phone);
 
             if (existingUser) {
-                return res.status(400).json({ message: 'User already exist'})
+                return res.status(400).json({ message: 'User already exist' });
             }
+
+            await createUser(name, phone, password);
+            res.json({ message: 'Registration successfully' });
+     } catch (err) {
         
      }
 }
