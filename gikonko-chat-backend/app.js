@@ -41,3 +41,10 @@ app.use('/api/posts', postRoutes);
 
 const users = {};
 
+io.on('connection', (socket) => {
+    console.log("A User connected", socket.id);
+
+    socket.on("login", (username) => {
+        
+    })
+});
