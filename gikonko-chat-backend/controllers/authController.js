@@ -53,4 +53,10 @@ export function logout (req, res) {
     });
 }
 
-export 
+export function getProfile(req, res) {
+   if (req.session.user) {
+    res.json(req.session.user);
+   } else {
+    res.status(401).json({ message: 'Unauthorized' });
+   }
+}
