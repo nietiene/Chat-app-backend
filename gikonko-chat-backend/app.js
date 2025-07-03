@@ -49,13 +49,26 @@ io.on('connection', (socket) => {
         io.emit("userList", Object.keys(users));
     });
 
-    socket.on("privateMessage", ({ to, message }) => {
+    socket.on("privateMessage", ({ to, from, message }) => {
         const toTargetSocketId = users[to];
         if (toTargetSocketId) {
             io.to(toTargetSocketId).emit("privateMessage", { from, message })
         }
     })
 
+    socket.on("typing", ({ to }) => {
+        const toSocketId = users[to];
+        if (toSocketId) {
+            io.to(toSocketId).emit('typing', {})
+        }
+    })
+
+    socket.on('stopTyping', ({ to }) => {
+        const toSocketId = users[to];
+        if (toSocketId) {
+            
+        }
+    })
     socket.on("disconnect", () => {
         for (const username in users) {
             if (users[username] = users[to]) {
