@@ -4,6 +4,9 @@ import bcrypt from "bcrypt";
 export async function register (req, res) {
      try {
         const { name, phone, password } = req.body;
+        if (!password && !typeof password !== 'string') {
+         return res.status(400).json({ message: 'Password must be a string' });
+        }
         const existingUser = await findUserByPhone(phone);
 
             if (existingUser) {

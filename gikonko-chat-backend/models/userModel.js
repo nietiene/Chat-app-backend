@@ -3,9 +3,10 @@ import bcrypt from "bcrypt";
 
 export async function createUser(name, phone, password) {
     const hashed  = await bcrypt.hash(password, 10);
+    console.log('password to hash:', password, typeof password);
     const [result] = await pool.query(
-        `INSERT INTO user (name, phone, role, password) VALUES(?, ?, ?)`,
-        [name, phone, password]
+        `INSERT INTO user (name, phone, password) VALUES(?, ?, ?)`,
+        [name, phone, hashed]
     );
     return result.insertId;
 }
