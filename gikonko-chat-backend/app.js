@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
     socket.on('stopTyping', ({ to }) => {
         const toSocketId = users[to];
         if (toSocketId) {
-            
+            io.to(toSocketId).emit("stopTyping", {});
         }
     })
     socket.on("disconnect", () => {
