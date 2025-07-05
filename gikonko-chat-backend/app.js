@@ -8,6 +8,7 @@ import { Server  } from "socket.io";
 import authRoutes from "./routes/authRoutes.js";
 // import chatRoutes from "./chatRoutes.js";
 // import postRoutes from "./postRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use('/api/auth', authRoutes);
 // app.use('/api/chat', chatRoutes);
 // app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/messages', messageRoutes);
 
 const users = {};
 
