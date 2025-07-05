@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
     const { sender, receiver, content, image } = req.body;
 
     try {
-        await saveMessage(sender, receiver, content, image || null);
+        await saveMessage(sender, receiver, content, image || "");
         res.status(201).json({ message: 'Message saved' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to save message '});
