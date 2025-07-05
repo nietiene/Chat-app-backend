@@ -9,6 +9,7 @@ import authRoutes from "./routes/authRoutes.js";
 // import chatRoutes from "./chatRoutes.js";
 // import postRoutes from "./postRoutes.js";
 import { saveMessage } from "./models/messageModel.js";
+import { getUserIdByUsername } from "./models/userModel.js";
 import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 dotenv.config();
@@ -55,13 +56,17 @@ io.on('connection', (socket) => {
     });
 
     socket.on("privateMessage", async ({ to, from, message }) => {
+     try {
+        const sender_id = await getUserIdByUsername(from);
+        const receiver_id = await getUserIdByUsername(to);
+        
+        await saveMessage(sender_id, receiver_id, message);
+
         const toTargetSocketId = users[to];
         if (toTargetSocketId) {
             io.to(toTargetSocketId).emit("privateMessage", { from, message })
         }
 
-        try {
-            await saveMessage(from, to, message);
         } catch (error) {
             console.error("Failed to save message", error);
         }
