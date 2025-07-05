@@ -23,7 +23,7 @@ export async function findUserByPhone(phone) {
 
 export function getUserIdByUsername(name) {
     return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM user WERE name = ?";
+        const query = "SELECT * FROM user WHERE name = ?";
         pool.query(query, [name], (err, result) => {
             if (err)  reject(err);
             if (result.length === 0) return reject(new Error("User not found"));
