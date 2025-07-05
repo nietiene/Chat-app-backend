@@ -19,9 +19,16 @@ router.get('/:user1/:user2', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { sender, receiver, content, image } = req.body;
+    let { sender, receiver, content, image } = req.body;
 
     try {
+        if (typeof sender === 'string') {
+            sender = await getUserIdByUsername(sender);
+        }
+
+        if (typeof receiver === 'string') {
+            receiver = await getMessageBetweenUsers(receiver);
+        }
         await saveMessage(sender, receiver, content, image || "");
         res.status(201).json({ message: 'Message saved' });
     } catch (error) {
