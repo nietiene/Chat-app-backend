@@ -19,7 +19,9 @@ export function getMessageBetweenUsers(user1, user2) {
                      ORDER BY created_at ASC
                      `;
       db.query(query, [user1, user2, user2, user1], (err, result) => {
-        
+        if (err) reject(err);
+
+        resolve(result);
       });
 
     })
