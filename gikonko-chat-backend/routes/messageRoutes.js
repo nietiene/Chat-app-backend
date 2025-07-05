@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
         }
 
         if (typeof receiver === 'string') {
-            receiver = await getMessageBetweenUsers(receiver);
+            receiver = await getUserIdByUsername(receiver);
         }
         await saveMessage(sender, receiver, content, image || "");
         res.status(201).json({ message: 'Message saved' });
