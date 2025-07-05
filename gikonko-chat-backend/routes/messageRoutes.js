@@ -14,3 +14,13 @@ router.get('/:user1/:user2', async (req, res) => {
     }
 });
 
+router.post('/', async (req, res) => {
+    const { sender, receiver, content, image } = req.body;
+
+    try {
+        await saveMessage(sender, receiver, content, image || null);
+        res.status(201).json({ message: 'Message saved' });
+    } catch (error) {
+        
+    }
+})
