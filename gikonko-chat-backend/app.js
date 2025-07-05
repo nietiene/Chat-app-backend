@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
     })
     socket.on("disconnect", () => {
         for (const username in users) {
-            if (users[username] = users[to]) {
+            if (users[username] = socket.id) {
                 delete users[username];
                 io.emit("userList", Object.keys(users));
                 break;
