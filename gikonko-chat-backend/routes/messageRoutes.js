@@ -21,6 +21,8 @@ router.post('/', async (req, res) => {
         await saveMessage(sender, receiver, content, image || null);
         res.status(201).json({ message: 'Message saved' });
     } catch (error) {
-        
+        res.status(500).json({ error: 'Failed to save message '});
     }
 })
+
+export default router;
