@@ -11,5 +11,10 @@ export async function saveMessage(sender, receiver, content, image = "") {
 
 
 export async function getMessageBetweenUsers(user1, user2) {
-
+        const [result] = await pool.query(
+            `SELECT * FROM messages
+            WHERE (sender_id = ? AND receiver_id = ?)
+            OR (sender_id = ? AND receiver_id = ?)
+            ORDER BY created_at ASC`
+        )
 }
