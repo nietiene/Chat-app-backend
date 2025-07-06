@@ -14,7 +14,6 @@ router.get('/:user1/:user2', async (req, res) => {
         const messages = await getMessageBetweenUsers(user1Id, user2Id);
         res.json(messages);
     } catch(error) {
-        console.error(error);
         res.status(500).json({ error: 'Failed to get message' });
     }
 });
