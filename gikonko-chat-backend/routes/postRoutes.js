@@ -15,7 +15,7 @@ const uploads = multer({ storage });
 
 router.post("/", uploads.single("image"), async (req, res) => {
         const { content } = req.body;
-        const sender_id = req.session.user_id;
+        const sender_id = req.session.user?.id;
         const visible_to = "parent";
         const image = req.file ? req.file.filename : null;
 
@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
                   u.name,
                   u.role,
                   u.profile_image
-                  FROM user u JOIN posts p
+                  FROM \`user\` u JOIN posts p
                   ON p.sender_id = u.user_id
                   WHERE p.visible_to = 'parent'
                   ORDER BY p.created_at ASC
