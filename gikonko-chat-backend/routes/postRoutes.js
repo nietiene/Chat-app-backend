@@ -31,3 +31,16 @@ router.post("/", uploads.single("image"), (req, res) => {
             }
         )
 })
+
+router.get("/", (req, res) => {
+    const query = `
+                  SELECT p.* ,
+                  u.name,
+                  u.role,
+                  u,profile_image
+                  FROM users u JOIN posts p
+                  ON p.sender_id = u.user_id
+                  WHERE p.visible_to = 'parent'
+                  ORDER BY p.created_at ASC
+                  `;
+})
