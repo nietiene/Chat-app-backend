@@ -54,9 +54,11 @@ const users = {};
 io.on('connection', (socket) => {
     console.log("A User connected", socket.id);
 
-    socket.on("login", (name, user_id) => {
-        users[user_id] = { socketId: socket.user_id, name }; 
-        io.emit("userList", Object.entries(users).map(([user_id, { name }]) => ({ user_id, name })));
+    socket.on("login", ({name, user_id}) => {
+        if (!name || !user_id) return;
+
+        users[name] = socket.user_id;
+        io.emit("userList", Object.keys(users));
     });
 
     socket.on("privateMessage", async ({ to, from, message }) => {
@@ -79,14 +81,14 @@ io.on('connection', (socket) => {
     socket.on("typing", ({ to }) => {
         const toSocketId = users[to];
         if (toSocketId) {
-            io.to(toSocketId).emit('typing', {})
+            io.to(toSocketId).emit('typing');
         }
     })
 
     socket.on('stopTyping', ({ to }) => {
         const toSocketId = users[to];
         if (toSocketId) {
-            io.to(toSocketId).emit("stopTyping", {});
+            io.to(toSocketId).emit("stopTyping");
         }
     })
     socket.on("disconnect", () => {
