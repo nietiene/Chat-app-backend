@@ -14,6 +14,7 @@ const storage = multer.diskStorage({
 const uploads = multer({ storage });
 
 router.post("/", uploads.single("image"), async (req, res) => {
+
         const { content } = req.body;
         const sender_id = req.session.user?.id;
         const visible_to = "parent";
