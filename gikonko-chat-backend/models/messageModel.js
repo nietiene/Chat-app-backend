@@ -15,6 +15,9 @@ export async function getMessageBetweenUsers(user1, user2) {
             `SELECT * FROM messages
             WHERE (sender_id = ? AND receiver_id = ?)
             OR (sender_id = ? AND receiver_id = ?)
-            ORDER BY created_at ASC`
-        )
+            ORDER BY created_at ASC`,
+            [user1, user2, user2, user1]
+        );
+
+        return result;
 }
