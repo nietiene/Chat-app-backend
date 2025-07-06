@@ -6,8 +6,8 @@ const router = express.Router();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, "uploads/"),
     filename: (req, file, cb) => {
-        const uniqueName = Date.now() + "-" + file.originalname;
-        cb(null, uniqueName);
+        const safeName = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
+        cb(null, safeName);
     }
 })
 
@@ -15,6 +15,8 @@ const uploads = multer({ storage });
 
 router.post("/", uploads.single("image"), async (req, res) => {
 
+    console.log("uploaded", req.file);
+    
         const { content } = req.body;
         const sender_id = req.session.user?.id;
         const visible_to = "parent";
