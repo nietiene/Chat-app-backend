@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import db from "..models/db.js";
+import db from "../models/db.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 
 const uploads = multer({ storage });
 
-router.post("/", uploads.single("image"), (req, res) => {
+router.post("/", uploads.single("image"), async (req, res) => {
         const { content } = req.body;
         const sender_id = req.session.user_id;
         const visible_to = "parent";
@@ -23,17 +23,24 @@ router.post("/", uploads.single("image"), (req, res) => {
             return res.status(400).json({ error: "Content or image required" });
         }
 
-        const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)";
-        db.query(
-            query, [sender_id, content, image, visible_to], (err) => {
-                if (err) return res.status(500).json({ error: err.message });
-                res.json({ success: true, message: "Post created successfully" });
-            }
-        )
+        try {
+           const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)";
+           await db.query(
+              query, [sender_id, content, image, visible_to], (err) => {
+                 if (err) return res.status(500).json({ error: err.message });
+                 res.json({ success: true, message: "Post created successfully" });
+             }
+         )
+        } catch (error) {
+               console.error(error);
+               res.status(500).json({ error: "Database error" }); 
+       }
+
 })
 
-router.get("/", (req, res) => {
-    const query = `
+router.get("/", async (req, res) => {
+    try {
+       const query = `
                   SELECT p.* ,
                   u.name,
                   u.role,
@@ -43,10 +50,12 @@ router.get("/", (req, res) => {
                   WHERE p.visible_to = 'parent'
                   ORDER BY p.created_at ASC
                   `;
-    db.query(query, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-       res.json(results);
-    })              
+       db.query(query, (err, results) => {
+          if (err) return res.status(500).json({ error: err.message });
+          res.json(results);
+    })   
+    }
+           
 })
 
 export default router;
