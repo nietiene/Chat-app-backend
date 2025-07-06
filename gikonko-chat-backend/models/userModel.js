@@ -23,13 +23,3 @@ export async function findUserByPhone(phone) {
     const [rows] = await pool.query('SELECT * FROM user WHERE phone = ?', [phone]);
     return rows[0];
 }
-
-export async function getUserIdByUsername(name) {
-    const [result] = await pool.query("SELECT * FROM user WHERE name = ?", [name]);
-
-    if (result.length === 0) {
-        throw new Error("User not found");
-    }
-
-    return result[0].user_id;
-}
