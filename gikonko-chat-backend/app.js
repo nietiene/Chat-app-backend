@@ -35,8 +35,12 @@ app.use('/uploads', express.static('uploads'));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    saveUninitialized: false,
+    cookie: { 
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax'
+     }
 }));
 
 app.use('/api/auth', authRoutes);
@@ -50,9 +54,9 @@ const users = {};
 io.on('connection', (socket) => {
     console.log("A User connected", socket.id);
 
-    socket.on("login", (username) => {
-        users[username] = socket.id;
-        io.emit("userList", Object.keys(users));
+    socket.on("login", (name, user_id) => {
+        users[user_id] = { socketId: socket.user_id, name }; 
+        io.emit("userList", Object.entries(users).map(([user_id, { name }]) => ({ user_id, name })));
     });
 
     socket.on("privateMessage", async ({ to, from, message }) => {
