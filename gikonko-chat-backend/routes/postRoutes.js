@@ -26,7 +26,8 @@ router.post("/", uploads.single("image"), (req, res) => {
         const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)";
         db.query(
             query, [sender_id, content, image, visible_to], (err) => {
-                
+                if (err) return res.status(500).json({ error: err.message });
+                res.json({ success: true, message: "Post created successfully" });
             }
         )
 })
