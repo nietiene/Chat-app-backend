@@ -54,6 +54,9 @@ router.get("/", async (req, res) => {
           if (err) return res.status(500).json({ error: err.message });
           res.json(results);
     })   
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to fetch posts "});
     }
            
 })
