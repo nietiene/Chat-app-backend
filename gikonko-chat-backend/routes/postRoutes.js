@@ -23,5 +23,5 @@ router.post("/", uploads.single("image"), (req, res) => {
             return res.status(400).json({ error: "Content or image required" });
         }
 
-        const query = 
+        const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, ?, ?)";
 })
