@@ -25,12 +25,10 @@ router.post("/", uploads.single("image"), async (req, res) => {
 
         try {
            const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)";
-           await db.query(
-              query, [sender_id, content, image, visible_to], (err) => {
+           await db.query(query, [sender_id, content, image, visible_to])
                  if (err) return res.status(500).json({ error: err.message });
                  res.json({ success: true, message: "Post created successfully" });
-             }
-         )
+             
         } catch (error) {
                console.error(error);
                res.status(500).json({ error: "Database error" }); 
@@ -44,16 +42,16 @@ router.get("/", async (req, res) => {
                   SELECT p.* ,
                   u.name,
                   u.role,
-                  u,profile_image
-                  FROM users u JOIN posts p
+                  u.profile_image
+                  FROM user u JOIN posts p
                   ON p.sender_id = u.user_id
                   WHERE p.visible_to = 'parent'
                   ORDER BY p.created_at ASC
                   `;
-       await db.query(query, (err, results) => {
-          if (err) return res.status(500).json({ error: err.message });
-          res.json(results);
-    })   
+
+    const [results] = await db.query(query);
+    res.json(results);
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to fetch posts "});
