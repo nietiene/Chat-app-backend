@@ -12,6 +12,8 @@ import { saveMessage } from "./models/messageModel.js";
 import { getUserIdByUsername } from "./models/userModel.js";
 import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
+import path from "path";
+
 dotenv.config();
 
 const app = express();
@@ -30,7 +32,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
