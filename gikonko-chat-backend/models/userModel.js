@@ -21,13 +21,12 @@ export async function findUserByPhone(phone) {
     return rows[0];
 }
 
-export function getUserIdByUsername(name) {
-    return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM user WHERE name = ?";
-        pool.query(query, [name], (err, result) => {
-            if (err)  reject(err);
-            if (result.length === 0) return reject(new Error("User not found"));
-            resolve(result[0].user_id);
-        })
-    })
+export async function getUserIdByUsername(name) {
+    const [result] = await pool.query("SELECT * FROM user WHERE name = ?", [name]);
+
+    if (result.length === 0) {
+        throw new Error("User not found");
+    }
+
+    return result[0].user_id;
 }

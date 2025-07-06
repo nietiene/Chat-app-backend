@@ -1,14 +1,10 @@
 import pool from "./db.js";
 
-export function saveMessage(sender, receiver, content, image = "") {
-    return new Promise((resolve, reject) => {
-        const query = "INSERT INTO messages (sender_id, receiver_id, content, image) VALUES(?, ?, ?, ?)";
-        db.query(query, [sender, receiver, content, image], (err, result) => {
-            if (err) return reject(err);
-
-            resolve(result);
-        })
-    })
+export async function saveMessage(sender, receiver, content, image = "") {
+    const [result] = await pool.query(
+        "INSERT INTO messages (sender_id, receiver_id, content, image)"
+    )
+    
 }
 
 
