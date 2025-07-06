@@ -20,6 +20,8 @@ router.post("/", uploads.single("image"), (req, res) => {
         const image = req.file ? req.file.filename : null;
 
         if (!sender_id || (!content && !image)) {
-            return 
+            return res.status(400).json({ error: "Content or image required" });
         }
+
+        const query = 
 })
