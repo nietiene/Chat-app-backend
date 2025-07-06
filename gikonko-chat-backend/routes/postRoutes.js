@@ -50,7 +50,7 @@ router.get("/", async (req, res) => {
                   WHERE p.visible_to = 'parent'
                   ORDER BY p.created_at ASC
                   `;
-       db.query(query, (err, results) => {
+       await db.query(query, (err, results) => {
           if (err) return res.status(500).json({ error: err.message });
           res.json(results);
     })   
