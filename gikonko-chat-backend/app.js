@@ -7,7 +7,7 @@ import http from "http";
 import { Server  } from "socket.io";
 import authRoutes from "./routes/authRoutes.js";
 // import chatRoutes from "./chatRoutes.js";
-// import postRoutes from "./postRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 import { saveMessage } from "./models/messageModel.js";
 import { getUserIdByUsername } from "./models/userModel.js";
 import messageRoutes from "./routes/messageRoutes.js"
@@ -41,7 +41,7 @@ app.use(session({
 
 app.use('/api/auth', authRoutes);
 // app.use('/api/chat', chatRoutes);
-// app.use('/api/posts', postRoutes);
+app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
