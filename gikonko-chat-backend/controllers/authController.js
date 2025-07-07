@@ -40,6 +40,7 @@ export async function login(req, res) {
             id: user.user_id,
             name: user.name,
             phone: user.phone,
+            profile_image: user.profile_image,
             role: user.role
         }
 
