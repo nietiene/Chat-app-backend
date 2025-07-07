@@ -22,16 +22,16 @@ export async function findUserByPhone(phone) {
 }
 
 export async function getUserByName(name) {
-    const [rows] = await db.query('SELECT * FROM users WHERE name = ?', [name]);
+    const [rows] = await pool.query('SELECT * FROM user WHERE name = ?', [name]);
     return rows[0];
 }
 
 export async function getUserById(user_id) {
-    const [rows] = await db.query('SELECT * FROM users WHERE user_id = ?', [user_id]);
+    const [rows] = await pool.query('SELECT * FROM user WHERE user_id = ?', [user_id]);
     return rows[0];
 }
 
 export async function getAllUsers() {
-    const [rows] = await db.query('SELECT user_id, name FROM users');
+    const [rows] = await pool.query('SELECT user_id, name FROM user');
     return rows;
 }

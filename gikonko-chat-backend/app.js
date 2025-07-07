@@ -53,79 +53,73 @@ app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
 const users = {};
-// Socket.IO connection handler
 io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);
 
-    // Handle user login
-    socket.on('login', async (name) => {
+    socket.on('login', async (username) => {
         try {
-            const user = await getUserByUsername(name);
+            const user = await getUserByName(username);
             if (user) {
-                users[name] = socket.id;
-                console.log(`${name} connected with socket ID: ${socket.id}`);
+                users[username] = socket.id;
+                console.log(`${username} connected with socket ID: ${socket.id}`);
+                io.emit('userList', Object.keys(users));
             }
         } catch (error) {
             console.error('Login error:', error);
         }
     });
-socket.on('privateMessage', async ({ to, from, message }) => {
-    try {
-        // Get user IDs
-        const sender = await getUserByUsername(from);
-        const receiver = await getUserByUsername(to);
-        
-        if (!sender || !receiver) {
-            console.log('User not found');
-            return;
-        }
 
-        // Save to database first
-        const messageId = await saveMessage(
-            sender.user_id,
-            receiver.user_id,
-            message
-        );
-        console.log('Message saved with ID:', messageId);
+    socket.on('privateMessage', async ({ to, from, message }) => {
+        try {
+            const sender = await getUserByName(from);
+            const receiver = await getUserByName(to);
+            
+            if (!sender || !receiver) {
+                console.log('User not found');
+                return;
+            }
 
-        // Then emit to recipients
-        const toSocketId = users[to];
-        if (toSocketId) {
-            io.to(toSocketId).emit('privateMessage', { 
-                from, 
+            // Save to database first
+            const messageId = await saveMessage(
+                sender.user_id,
+                receiver.user_id,
+                message
+            );
+            console.log('Message saved with ID:', messageId);
+
+            // Deliver to recipient if online
+            if (users[to]) {
+                io.to(users[to]).emit('privateMessage', { 
+                    from,
+                    message,
+                    timestamp: new Date()
+                });
+            }
+
+            // Send confirmation back to sender
+            socket.emit('privateMessage', {
+                from: 'You',
                 message,
-                id: messageId,
                 timestamp: new Date()
             });
-        }
 
-        // Also send back to sender
-        const fromSocketId = users[from];
-        if (fromSocketId) {
-            io.to(fromSocketId).emit('privateMessage', {
-                from: "You",
-                message,
-                id: messageId,
-                timestamp: new Date()
-            });
+        } catch (error) {
+            console.error('Error handling private message:', error);
         }
-    } catch (error) {
-        console.error('Error handling private message:', error);
-    }
-});
-    // Handle disconnect
+    });
+
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
         // Remove user from connections
-        for (const [name, id] of Object.entries(users)) {
+        for (const [username, id] of Object.entries(users)) {
             if (id === socket.id) {
-                delete users[name];
+                delete users[username];
+                io.emit('userList', Object.keys(users));
                 break;
             }
         }
     });
 });
-
 
 const PORT = process.env.PORT
 server.listen(PORT, () => {
