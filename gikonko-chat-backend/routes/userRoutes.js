@@ -26,13 +26,7 @@ const upload = multer({ storage });
  }
 
  router.post("/change-profile-photo", isLoggedIn, upload.single("profile_image"), (req, res) => {
-    console.log("Upload route hit");
-
-    if (!req.file) { 
-        console.log("No file uploaded");
-        return res.status(400).json({ error: "No file uploaded" })
-    };
-   console.log("File uploaded", req.file.filename);
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
     db.query(sql, [req.file.filename, req.session.user.id], (err) => {
         if (err) return res.status(500).json({ error: err.message });
