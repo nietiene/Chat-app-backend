@@ -8,7 +8,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "/uploads/");
+        cb(null, "uploads/");
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
@@ -21,11 +21,13 @@ const upload = multer({ storage });
 
 
  function isLoggedIn(req, res, next) {
-    if (!req.session.user_id) return res.status(401).json({ error: "Unauthorized" });
+    if (!req.session.user || !req.session.user.id) return res.status(401).json({ error: "Unauthorized" });
     next();
  }
 
- router.post("/chang-profile-photo", isLoggedIn, upload.single("profile_image"), (req, res) => {
+ router.post("/change-profile-photo", isLoggedIn, upload.single("profile_image"), (req, res) => {
+    console.log("REQ FILE:", req.file); 
+    console.log("SESSION:", req.session.user_id);
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
     db.query(sql, [req.file.filename, req.session.user_id], (err) => {
