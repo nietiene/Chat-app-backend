@@ -3,7 +3,6 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import db from "../models/db.js"
-import { error } from "console";
 
 const router = express.Router();
 
@@ -18,8 +17,8 @@ const storage = multer.diskStorage({
     },
 })
 
-const upload = multer;
- ({ storage });
+const upload = multer({ storage });
+
 
  function isLoggedIn(req, res, next) {
     if (!req.session.user_id) return res.status(401).json({ error: "Unauthorized" });
