@@ -65,5 +65,11 @@ export function getProfile(req, res) {
    }
 
    const sql = "SELECT user_id, name, phone, role, profile_image FROM user WHERE user_id = ?";
-   d
+   db.query(sql, [req.session.user.id], (err, result) => {
+    if (err || result.length === 0) {
+        return  res.status(500).json({ message: "Failed to fetch profile" });
+    }
+
+    res.json(result[0]);
+   })
 }
