@@ -48,4 +48,16 @@ try {
 
 router.get('/', getAllUsers);
 
+// Add this to your userRoutes.js
+router.get('/', async (req, res) => {
+    try {
+        const query = "SELECT user_id, name FROM user";
+        pool.query(query, (err, results) => {
+            if (err) return res.status(500).json({ error: 'Database error' });
+            res.json(results);
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+});
 export default router;
