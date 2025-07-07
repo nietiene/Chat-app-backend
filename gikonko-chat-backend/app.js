@@ -57,16 +57,13 @@ const users = {};
 io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);
 
-    // Store user socket connections
-    const users = {};
-
     // Handle user login
-    socket.on('login', async (username) => {
+    socket.on('login', async (name) => {
         try {
-            const user = await getUserByUsername(username);
+            const user = await getUserByUsername(name);
             if (user) {
-                users[username] = socket.id;
-                console.log(`${username} connected with socket ID: ${socket.id}`);
+                users[name] = socket.id;
+                console.log(`${name} connected with socket ID: ${socket.id}`);
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -116,9 +113,9 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
         // Remove user from connections
-        for (const [username, id] of Object.entries(users)) {
+        for (const [name, id] of Object.entries(users)) {
             if (id === socket.id) {
-                delete users[username];
+                delete users[name];
                 break;
             }
         }

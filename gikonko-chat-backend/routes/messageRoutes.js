@@ -34,8 +34,8 @@ router.get('/:user1/:user2', async (req, res) => {
             const receiver = await getUserById(msg.receiver_id);
             return {
                 ...msg,
-                sender_username: sender.username,
-                receiver_username: receiver.username
+                sender_username: sender.name,
+                receiver_username: receiver.name
             };
         }));
 
@@ -78,10 +78,10 @@ router.post('/', async (req, res) => {
 });
 
 // Get unread message count
-router.get('/unread/:username', async (req, res) => {
+router.get('/unread/:name', async (req, res) => {
     try {
-        const { username } = req.params;
-        const user = await getUserByUsername(username);
+        const { name } = req.params;
+        const user = await getUserByUsername(name);
         
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
