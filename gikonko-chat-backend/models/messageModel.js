@@ -1,4 +1,4 @@
-import { db } from './db.js';
+import  db from './db.js';
 
 // Save a new message
 export async function saveMessage(sender_id, receiver_id, content, image = null) {

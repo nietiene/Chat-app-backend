@@ -9,7 +9,6 @@ import authRoutes from "./routes/authRoutes.js";
 // import chatRoutes from "./chatRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { saveMessage } from "./models/messageModel.js";
-import { getUserIdByUsername } from "./models/userModel.js";
 import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import path from "path";
@@ -54,57 +53,78 @@ app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
 const users = {};
-
+// Socket.IO connection handler
 io.on('connection', (socket) => {
-    console.log("A User connected", socket.id);
+    console.log('New client connected:', socket.id);
 
-    socket.on("login", (username) => {
-        users[username] = socket.id;
-        io.emit("userList", Object.keys(users));
+    // Store user socket connections
+    const users = {};
+
+    // Handle user login
+    socket.on('login', async (username) => {
+        try {
+            const user = await getUserByUsername(username);
+            if (user) {
+                users[username] = socket.id;
+                console.log(`${username} connected with socket ID: ${socket.id}`);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
     });
 
-    socket.on("privateMessage", async ({ to, from, message }) => {
-     try {
-        const sender_id = await getUserIdByUsername(from);
-        const receiver_id = await getUserIdByUsername(to);
-        
-        await saveMessage(sender_id, receiver_id, message);
+    // Handle private messages
+    socket.on('privateMessage', async ({ to, from, message }) => {
+        try {
+            // Get user IDs
+            const sender = await getUserByUsername(from);
+            const receiver = await getUserByUsername(to);
+            
+            if (!sender || !receiver) {
+                return;
+            }
 
-        const toTargetSocketId = users[to];
-        if (toTargetSocketId) {
-            io.to(toTargetSocketId).emit("privateMessage", { from, message })
-        }
+            // Save message to database
+            const messageId = await saveMessage(
+                sender.user_id,
+                receiver.user_id,
+                message
+            );
+
+            // Emit to receiver if online
+            if (users[to]) {
+                io.to(users[to]).emit('privateMessage', {
+                    from,
+                    message,
+                    timestamp: new Date()
+                });
+            }
+
+            // Emit back to sender for their own UI
+            socket.emit('privateMessage', {
+                from: 'You',
+                message,
+                timestamp: new Date()
+            });
 
         } catch (error) {
-            console.error("Failed to save message", error);
+            console.error('Error handling private message:', error);
         }
-    })
+    });
 
-    socket.on("typing", ({ to }) => {
-        const toSocketId = users[to];
-        if (toSocketId) {
-            io.to(toSocketId).emit('typing', {})
-        }
-    })
-
-    socket.on('stopTyping', ({ to }) => {
-        const toSocketId = users[to];
-        if (toSocketId) {
-            io.to(toSocketId).emit("stopTyping", {});
-        }
-    })
-    socket.on("disconnect", () => {
-        for (const username in users) {
-            if (users[username] === socket.id) {
+    // Handle disconnect
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+        // Remove user from connections
+        for (const [username, id] of Object.entries(users)) {
+            if (id === socket.id) {
                 delete users[username];
-                io.emit("userList", Object.keys(users));
                 break;
             }
         }
-        console.log("User disconected", socket.id);
     });
-
 });
+
 
 const PORT = process.env.PORT
 server.listen(PORT, () => {

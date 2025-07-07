@@ -21,11 +21,9 @@ export async function findUserByPhone(phone) {
     return rows[0];
 }
 
-import { db } from './db.js';
-
 // Get user by username
 export async function getUserByUsername(username) {
-    const [users] = await db.query(
+    const [users] = await pool.query(
         `SELECT user_id, name FROM users WHERE name = ?`,
         [username]
     );
@@ -34,7 +32,7 @@ export async function getUserByUsername(username) {
 
 // Get user by ID
 export async function getUserById(user_id) {
-    const [users] = await db.query(
+    const [users] = await pool.query(
         `SELECT user_id, name FROM users WHERE user_id = ?`,
         [user_id]
     );
