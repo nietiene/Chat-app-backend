@@ -1,8 +1,9 @@
-import { error } from "console";
 import { getAllUsers  } from "../controllers/userController.js";
 import express from "express";
 import multer from "multer";
 import path from "path";
+import db from "../models/db.js"
+import { error } from "console";
 
 const router = express.Router();
 
@@ -25,7 +26,13 @@ const upload = multer;
     next();
  }
 
- router.post("/chang-profile-photo", isLoggedIn, upload.single("profile_image"), ())
+ router.post("/chang-profile-photo", isLoggedIn, upload.single("profile_image"), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
+    db.query(sql, [req.file.filename, req.session.user_id], (err) => {
+        if (err) return res.status(500).json({ error: err.message });
+    })
+ })
 
 router.get('/', getAllUsers);
 
