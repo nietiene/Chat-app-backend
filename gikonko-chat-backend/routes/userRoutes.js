@@ -3,6 +3,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import db from "../models/db.js"
+import { error } from "console";
 
 const router = express.Router();
 
@@ -26,12 +27,23 @@ const upload = multer({ storage });
  }
 
  router.post("/change-profile-photo", isLoggedIn, upload.single("profile_image"), (req, res) => {
+try {
+  
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
-    db.query(sql, [req.file.filename, req.session.user.id], (err) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ success: true, filename: req.file.filename });
-    })
+    db.query(sql, [req.file.filename, req.session.user.id]);
+      
+    req.session.user.profile_image = req.file.filename;
+    res.json({
+        success: true,
+        filename: req.file.filename,
+        profile_image: req.file.filename
+    });
+      
+} catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+}
  })
 
 router.get('/', getAllUsers);

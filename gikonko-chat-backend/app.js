@@ -18,6 +18,12 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+
+app.use(cors({
+    origin:'http://localhost:5173',
+    credentials: true
+}));
 const io = new Server(server, {
     cors: {
         origin: 'http://localhost:5173',
@@ -26,10 +32,6 @@ const io = new Server(server, {
     }
 });
 
-app.use(cors({
-    origin:'http://localhost:5173',
-    credentials: true
-}));
 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
@@ -38,7 +40,11 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { 
+        secure: false,
+        httpOnly: true,
+        sameSite: "lax"
+     }
 }));
 
 app.use('/api/auth', authRoutes);

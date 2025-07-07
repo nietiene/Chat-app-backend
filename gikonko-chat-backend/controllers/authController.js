@@ -1,6 +1,5 @@
 import { createUser, findUserByPhone } from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import db from "../models/db.js"
 
 export async function register (req, res) {
      try {
@@ -60,16 +59,9 @@ export function logout (req, res) {
 }
 
 export function getProfile(req, res) {
-   if (!req.session.user || !req.session.user.id) {
+   if (req.session.user) {
+    res.json(req.session.user);
+   } else {
     res.status(401).json({ message: 'Unauthorized' });
    }
-
-   const sql = "SELECT user_id, name, phone, role, profile_image FROM user WHERE user_id = ?";
-   db.query(sql, [req.session.user.id], (err, result) => {
-    if (err || result.length === 0) {
-        return  res.status(500).json({ message: "Failed to fetch profile" });
-    }
-
-    res.json(result[0]);
-   })
 }
