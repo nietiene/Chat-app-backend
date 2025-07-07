@@ -69,46 +69,50 @@ io.on('connection', (socket) => {
             console.error('Login error:', error);
         }
     });
+socket.on('privateMessage', async ({ to, from, message }) => {
+    try {
+        // Get user IDs
+        const sender = await getUserByUsername(from);
+        const receiver = await getUserByUsername(to);
+        
+        if (!sender || !receiver) {
+            console.log('User not found');
+            return;
+        }
 
-    // Handle private messages
-    socket.on('privateMessage', async ({ to, from, message }) => {
-        try {
-            // Get user IDs
-            const sender = await getUserByUsername(from);
-            const receiver = await getUserByUsername(to);
-            
-            if (!sender || !receiver) {
-                return;
-            }
+        // Save to database first
+        const messageId = await saveMessage(
+            sender.user_id,
+            receiver.user_id,
+            message
+        );
+        console.log('Message saved with ID:', messageId);
 
-            // Save message to database
-            const messageId = await saveMessage(
-                sender.user_id,
-                receiver.user_id,
-                message
-            );
-
-            // Emit to receiver if online
-            if (users[to]) {
-                io.to(users[to]).emit('privateMessage', {
-                    from,
-                    message,
-                    timestamp: new Date()
-                });
-            }
-
-            // Emit back to sender for their own UI
-            socket.emit('privateMessage', {
-                from: 'You',
+        // Then emit to recipients
+        const toSocketId = users[to];
+        if (toSocketId) {
+            io.to(toSocketId).emit('privateMessage', { 
+                from, 
                 message,
+                id: messageId,
                 timestamp: new Date()
             });
-
-        } catch (error) {
-            console.error('Error handling private message:', error);
         }
-    });
 
+        // Also send back to sender
+        const fromSocketId = users[from];
+        if (fromSocketId) {
+            io.to(fromSocketId).emit('privateMessage', {
+                from: "You",
+                message,
+                id: messageId,
+                timestamp: new Date()
+            });
+        }
+    } catch (error) {
+        console.error('Error handling private message:', error);
+    }
+});
     // Handle disconnect
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);

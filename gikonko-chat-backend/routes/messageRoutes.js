@@ -95,4 +95,34 @@ router.get('/unread/:name', async (req, res) => {
     }
 });
 
+// Add this to your messageRoutes.js
+router.post('/send', async (req, res) => {
+    try {
+        const { sender, receiver, content } = req.body;
+        
+        // Get user IDs from names
+        const senderData = await getUserByUsername(sender);
+        const receiverData = await getUserByUsername(receiver);
+        
+        if (!senderData || !receiverData) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Save to database
+        const messageId = await saveMessage(
+            senderData.user_id,
+            receiverData.user_id,
+            content
+        );
+
+        res.status(201).json({ 
+            success: true,
+            messageId 
+        });
+    } catch (error) {
+        console.error('Error saving message:', error);
+        res.status(500).json({ error: 'Failed to save message' });
+    }
+});
+
 export default router;
