@@ -30,7 +30,7 @@ const upload = multer({ storage });
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
     db.query(sql, [req.file.filename, req.session.user.id], (err) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json({ success: true, message: "Profile image updated" });
+        res.json({ success: true, filename: req.file.filename });
     })
  })
 
