@@ -21,13 +21,22 @@ export async function findUserByPhone(phone) {
     return rows[0];
 }
 
-export function getUserIdByUsername(name) {
-    return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM user WHERE name = ?";
-        pool.query(query, [name], (err, result) => {
-            if (err)  reject(err);
-            if (result.length === 0) return reject(new Error("User not found"));
-            resolve(result[0].user_id);
-        })
-    })
+import { db } from './db.js';
+
+// Get user by username
+export async function getUserByUsername(username) {
+    const [users] = await db.query(
+        `SELECT user_id, name FROM users WHERE name = ?`,
+        [username]
+    );
+    return users[0];
+}
+
+// Get user by ID
+export async function getUserById(user_id) {
+    const [users] = await db.query(
+        `SELECT user_id, name FROM users WHERE user_id = ?`,
+        [user_id]
+    );
+    return users[0];
 }
