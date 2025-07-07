@@ -66,7 +66,9 @@ export function getProfile(req, res) {
  const slq = "SELECT user_id, name, phone, role, profile_image FROM user WHERE user_id = ?";
  db.query(slq, [req.session.user.id], (err, result) => {
     if (err || result.length === 0) {
-        return res.status(500).json({ error: "Failed to get user profile"})
+        return res.status(500).json({ error: "Failed to get user profile" })
     }
+
+    res.json(result[0]);
  })
 }
