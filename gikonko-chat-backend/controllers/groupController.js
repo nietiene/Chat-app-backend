@@ -13,7 +13,10 @@ export async function createGroup(req, res) {
 
       try {
         const [groupResult] = await conn.query(
-        'INSERT INTO groups (group_name, created_by, created_at) VALUES()'
-        )
+        'INSERT INTO groups (group_name, created_by, created_at) VALUES(?, ?, NOW())',
+        [name, created_by]
+        );
+
+        const g_id = groupResult.insertId;
       }
 }
