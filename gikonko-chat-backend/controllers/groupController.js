@@ -80,7 +80,7 @@ export async function getMyGroup(req, res) {
       }
 }
 
-export function getGroupMessages(req, res) {
+export async function getGroupMessages(req, res) {
     const { g_id } = req.params;
 
     try {
