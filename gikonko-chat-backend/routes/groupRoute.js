@@ -39,6 +39,20 @@ router.post('/', async (req, res) => {
         });
     } catch (error) {
         await db.rollback();
-        console.error("Error in creating croup")
+        console.error("Error in creating group", error);
+        res.status(500).json({ message: 'Error in creating group:', error: error.message})
+    }
+});
+
+router.get('/my', async (req, res) => {
+    try {
+        const [groups] = await db.query(
+            `SELECT g.g_id, g.group_name, g.create_by, g.created_at
+            FROM groups g 
+            JOIN group_members gm ON g.g_id = gm.g_id
+            WHERE gm.user_id = ?`,
+            [req.user.name]
+            
+        )
     }
 })
