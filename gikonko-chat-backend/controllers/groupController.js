@@ -43,3 +43,8 @@ export async function createGroup(req, res) {
       }
 }
 
+export async function getMyGroup(req, res) {
+      const user_id  = req.user.user_id;
+
+      
+}
