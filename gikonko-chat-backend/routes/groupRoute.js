@@ -1,8 +1,15 @@
 import express from "express";
-import { createGroup } from "../controllers/groupController.js";
-
 const router = express.Router();
+import db from "../models/db.js";
 
-router.post('/', createGroup);
+router.post('/', async (req, res) => {
+    try {
+        const {group_name, members } = req.body;
+        const created_by = req.user.name;
+        const created_at = new Date();
 
-export default router;
+        if (!group_name || !members || members.length === 0) {
+            
+        }
+    }
+})
