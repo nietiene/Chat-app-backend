@@ -60,17 +60,19 @@ export async function createGroup(req, res) {
 
 export async function getMyGroup(req, res) {
       const user_id  = req.session.user.user_id;
+      console.log('Session user:', req.session.user);
 
       try {
         const [groups] = await db.query(
             `SELECT g.g_id, g.group_name, g.created_by, g.created_at
-            FROM groups g
-            JOIN group_members gm ON g.g_id = gm.g_id
-            WHERE gm.user_id = ?
-            ORDER BY g.created_at DESC`,
+             FROM groups g
+             JOIN group_members gm ON g.g_id = gm.g_id
+             WHERE gm.user_id = ?
+             ORDER BY g.created_at DESC`,
             [user_id]
         );
-
+ 
+        console.log('Group fetched:', groups);
         res.json(groups);
       } catch (err) {
         console.error('Error fetching user groups', err);
