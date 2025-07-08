@@ -30,5 +30,15 @@ router.post('/', async (req, res) => {
             );
         }
         await db.commit();
+
+        res.status(201).json({
+            g_id: groupId,
+            group_name,
+            created_by,
+            created_at
+        });
+    } catch (error) {
+        await db.rollback();
+        console.error("Error in creating croup")
     }
 })
