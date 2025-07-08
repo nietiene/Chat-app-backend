@@ -57,5 +57,8 @@ export async function getMyGroup(req, res) {
         );
 
         res.json(groups);
+      } catch (err) {
+        console.error('Error fetching user groups', err);
+        res.status(500).json({ message: 'Failed to fetch groups' })
       }
 }
