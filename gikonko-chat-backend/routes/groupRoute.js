@@ -18,5 +18,17 @@ router.post('/', async (req, res) => {
             'INSERT INTO groups (group_name, created_by, created_at) VALUES(?, ?, ?)',
             [group_name, created_by, created_at]
         );
+
+        const groupId = groupResult.insertId;
+
+        const allMembers = [...new Set({...members, created_by})];
+
+        for (const member of allMembers) {
+            await db.query(
+                'INSERT INTO group_members(g_id, user_id) VALUES(?, ?)',
+                [groupId, member]
+            );
+        }
+        await db.commit();
     }
 })
