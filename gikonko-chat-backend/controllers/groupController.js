@@ -82,8 +82,17 @@ export async function getMyGroup(req, res) {
 
 export async function getGroupMessages(req, res) {
     const { g_id } = req.params;
+    const user_id = req.user.id;
 
     try {
+        const [membership] = await db.query(
+            'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ?',
+            [g_id, user_id]
+        );
+        if (!membership.length) {
+            return res.status(493).json({ message: 'Not a group member' });
+        }
+        
         const [message] = await db.query (
             `SELECT 
                 gm.g_m_id, 
