@@ -1,11 +1,10 @@
 import express from "express";
 import { createGroup, getMyGroup } from "../controllers/groupController.js";
-import { login } from "../controllers/authController.js";
-
+import { isAuthenticated } from "../controllers/auth.js";
 const router = express.Router();
 
-router.post('/', login, createGroup);
+router.post('/', isAuthenticated, createGroup);
 
-router.get('/my', login, getMyGroup);
+router.get('/my', isAuthenticated, getMyGroup);
 
 export default router;

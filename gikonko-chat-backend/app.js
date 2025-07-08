@@ -11,6 +11,7 @@ import postRoutes from "./routes/postRoutes.js";
 import { saveMessage } from "./models/messageModel.js";
 import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
+import groupRoutes from "./routes/groupRoute.js"
 import path from "path";
 
 dotenv.config();
@@ -51,6 +52,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/groups', groupRoutes);
 
 const users = {};
 io.on('connection', (socket) => {
