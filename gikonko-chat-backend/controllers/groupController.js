@@ -33,5 +33,13 @@ export async function createGroup(req, res) {
             )
         }
         await conn.commit();
+        res.status(201).json({ message: 'Group created successfully', g_id })
+      } catch (error) {
+        await conn.rollback();
+        console.error("Error creating group", error);
+        res.status(500).json({ members: 'Failed to create group' });
+      } finally {
+        conn.release();
       }
 }
+
