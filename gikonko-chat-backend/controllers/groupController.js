@@ -18,5 +18,12 @@ export async function createGroup(req, res) {
         );
 
         const g_id = groupResult.insertId;
+
+        for (const username of members) {
+            const [[userRow]] = await conn.query(
+                'SELECT user_id FROM user WHERE name = ?',
+                [username]
+            )
+        }
       }
 }
