@@ -87,7 +87,10 @@ io.on('connection', async (socket) => {
 
     socket.on('groupMessage', async ({ g_id, content, type = 'text'}) => {
         try {
-            await
+            await db.query(
+                'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id VALUES(?, ?, ?, 0, NOW(), ?))',
+                []
+            )
         }
     })
 
