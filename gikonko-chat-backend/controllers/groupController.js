@@ -113,5 +113,9 @@ export async function sendGroupMessage(req, res) {
             'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, 0, NOW(), ?)',
             [user_id, type, content, g_id]
         );
+        res.status(201).json({ message: 'Message sent' });
+    } catch (err) {
+        console.error('Error sending group message', err);
+        res.status(500).json({ message: 'Failed to send message' });
     }
 }
