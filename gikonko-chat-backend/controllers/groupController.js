@@ -23,7 +23,15 @@ export async function createGroup(req, res) {
             const [[userRow]] = await conn.query(
                 'SELECT user_id FROM user WHERE name = ?',
                 [username]
+            );
+
+            if (!userRow) throw new Error(`User not found: ${username}`);
+
+            await conn.query(
+                'INSERT INTO group_members (g_id, user_id, joined_at) VALUES(?, ?, NOW())',
+                [g_id, userRow.user_id]
             )
         }
+        await conn.commit();
       }
 }
