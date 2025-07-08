@@ -44,7 +44,7 @@ export async function createGroup(req, res) {
 }
 
 export async function getMyGroup(req, res) {
-      const user_id  = req.user.user_id;
+      const user_id  = req.session.user.user_id;
 
       try {
         const [groups] = await db.query(
