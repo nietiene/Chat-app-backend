@@ -118,6 +118,10 @@ router.get('/:groupId/messages', async (req, res) => {
             WHERE gm.g_id = ?
             ORDER BY gm.created_At ASC`,
             [groupId]
-        )
+        );
+        res.json(message);
+    } catch (error) {
+        console.error('Error fetching group messages', error);
+        res.status(500).json({ message: 'Error fetching messages', error: error.message });
     }
 })
