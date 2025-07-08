@@ -79,3 +79,39 @@ export async function getMyGroup(req, res) {
         res.status(500).json({ message: 'Failed to fetch groups' })
       }
 }
+
+export function getGroupMessages(req, res) {
+    const { g_id } = req.params;
+
+    try {
+        const [message] = await db.query (
+            `SELECT gm.g_m_id, gm.user_id, u.name, AS sender_name
+              gm.type, gm.content, gm.is_read, gm.created_at
+              FROM group_message gm
+              JOIN user u ON gm.user_id = u.user_id
+              WHERE gm.g_id ?
+              ORDER BY gm.created+at ASC`,
+              [g_id]
+        );
+        res.json(message);
+    } catch (err) {
+        console.error('Error fetching group messages:', err);
+        res.status(500).json({ message: 'Failed to fetch group messages' });
+    }
+}
+
+export async function sendGroupMessage(req, res) {
+    const { g_id, content, type = 'text' } = req.body;
+    const user_id = req.session.user.id;
+
+    if (!g_id || !content) {
+        return res.status(400).json({ message: 'Group ID and content required' });
+    }
+
+    try {
+        await db.query (
+            'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, 0, NOW(), ?)',
+            [user_id, type, content, g_id]
+        );
+    }
+}
