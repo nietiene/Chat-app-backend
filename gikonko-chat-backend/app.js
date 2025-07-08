@@ -89,8 +89,19 @@ io.on('connection', async (socket) => {
         try {
             await db.query(
                 'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id VALUES(?, ?, ?, 0, NOW(), ?))',
-                []
-            )
+                [socket.user_id, type, content, g_id]
+            );
+
+            io.to(`group_${g_id}`).emit('newGroupMessage', {
+                g_id,
+                user_id: socket.user_id,
+                sender_name: userGroup.name,
+                content,
+                type,
+                created_at: new Date().toISOString()
+            });
+        } catch (err) {
+            console.error('Failed to send group message via socket', err);
         }
     })
 
