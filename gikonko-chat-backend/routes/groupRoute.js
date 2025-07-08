@@ -81,7 +81,8 @@ router.post('/:groupId/messages', async (req, res) => {
 
         const [result] = await db.query (
             //g_m_id	user_id	type	content	is_read	created_at	
-            'INSERT INTO group_message (g_id, )'
-        )
+            'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, ?, ?, ?)',
+            [user_id, 'text', content, 0, created_at, groupId]
+        );
     }
 })
