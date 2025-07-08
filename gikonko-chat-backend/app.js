@@ -13,7 +13,9 @@ import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import groupRoutes from "./routes/groupRoute.js"
 import { getUserByName } from "./models/userModel.js";
+import db from "./models/db.js"
 import path from "path";
+import { type } from "os";
 
 dotenv.config();
 
@@ -56,7 +58,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/groups', groupRoutes);
 
 const users = {};
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
 
     socket.on('login', async (username) => {
@@ -71,6 +73,23 @@ io.on('connection', (socket) => {
             console.error('Login error:', error);
         }
     });
+    
+    const userInGroup = socket.request.session.user;
+    if (!userInGroup) return;
+
+    socket.user_id = userInGroup.user_id;
+
+    const [userGroup] = await db.query(
+        `SELECT g_id FROM group_members WHERE user_id = ?`,
+        [userInGroup.user_id]
+    );
+    userGroup.forEach(g => socket.join(`group_${g.g_id}`));
+
+    socket.on('groupMessage', async ({ g_id, content, type = 'text'}) => {
+        try {
+            await
+        }
+    })
 
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
