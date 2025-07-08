@@ -12,6 +12,7 @@ import { saveMessage } from "./models/messageModel.js";
 import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import groupRoutes from "./routes/groupRoute.js"
+import { getUserByName } from "./models/userModel.js";
 import path from "path";
 
 dotenv.config();
