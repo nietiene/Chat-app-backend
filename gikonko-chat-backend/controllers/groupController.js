@@ -7,4 +7,8 @@ export async function createGroup(req, res) {
     if (!group_name || !userId) {
         return res.status(400).json({ error: "Missing group name or user not logged in" })
     }
+
+    try {
+        const [result] = await
+    }
 }
