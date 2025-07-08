@@ -59,7 +59,7 @@ export async function createGroup(req, res) {
 }
 
 export async function getMyGroup(req, res) {
-      const user_id  = req.session.user.user_id;
+      const user_id  = req.session.user.id;
       console.log('Session user:', req.session.user);
 
       try {
