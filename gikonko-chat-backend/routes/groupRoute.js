@@ -52,7 +52,18 @@ router.get('/my', async (req, res) => {
             JOIN group_members gm ON g.g_id = gm.g_id
             WHERE gm.user_id = ?`,
             [req.user.name]
-            
-        )
+        );
+
+        res.json(groups);
+    } catch (error) {
+        console.error("Error in fetching groups:", error);
+        res.status(500).json({ message: 'Error fetching groups', error: error.message })
+    }
+});
+
+
+router.post('/:groupId/messages', async (req, res) => {
+    try {
+        const { content } = req.body;
     }
 })
