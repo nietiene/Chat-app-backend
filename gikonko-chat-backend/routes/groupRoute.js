@@ -102,6 +102,13 @@ router.get('/:groupId/messages', async (req, res) => {
         const { groupId } = req.params;
         const user_id = req.user.name;
 
-        const [membership]
+        const [membership] = await db.query(
+            'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ? LIMIT 1',
+            [groupId, user_id]
+        );
+
+        if (membership.length === 0) {
+            return res.status(403).json({ message: 'You are not member of this group' })
+        }
     }
 })
