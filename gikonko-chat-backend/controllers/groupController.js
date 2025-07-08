@@ -46,5 +46,16 @@ export async function createGroup(req, res) {
 export async function getMyGroup(req, res) {
       const user_id  = req.user.user_id;
 
-      
+      try {
+        const [groups] = await db.query(
+            `SELECT g.g_id, g.group_name, g.created_by, g.created_at
+            FROM groups g
+            JOIN group_members gm ON g.g_id = gm.g_id
+            WHERE gm.user_id = ?
+            ORDER BY g.created_at DESC`,
+            [user_id]
+        );
+
+        res.json(groups);
+      }
 }
