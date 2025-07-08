@@ -9,7 +9,14 @@ router.post('/', async (req, res) => {
         const created_at = new Date();
 
         if (!group_name || !members || members.length === 0) {
-            
+            return res.status(400).json({ message: 'Group name and members required' })
         }
+
+        await db.beginTransaction();
+
+        const [groupResult] = await db.query(
+            'INSERT INTO groups (group_name, created_by, created_at) VALUES(?, ?, ?)',
+            [group_name, created_by, created_at]
+        );
     }
 })
