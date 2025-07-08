@@ -85,13 +85,19 @@ export async function getGroupMessages(req, res) {
 
     try {
         const [message] = await db.query (
-            `SELECT gm.g_m_id, gm.user_id, u.name, AS sender_name
-              gm.type, gm.content, gm.is_read, gm.created_at
-              FROM group_message gm
-              JOIN user u ON gm.user_id = u.user_id
-              WHERE gm.g_id ?
-              ORDER BY gm.created+at ASC`,
-              [g_id]
+            `SELECT 
+                gm.g_m_id, 
+                gm.user_id, 
+                u.name AS sender_name,
+                gm.type, 
+                gm.content, 
+                gm.is_read, 
+                gm.created_at
+             FROM group_message gm
+             JOIN user u ON gm.user_id = u.user_id
+             WHERE gm.g_id = ?
+             ORDER BY gm.created_at ASC`,
+            [g_id]
         );
         res.json(message);
     } catch (err) {
