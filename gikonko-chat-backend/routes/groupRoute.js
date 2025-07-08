@@ -93,6 +93,15 @@ router.post('/:groupId/messages', async (req, res) => {
         res.status(201).json(message[0]);
     } catch(error) {
         console.error('Error sending group message:', error);
-        res.status(500).json({ message: 'Error sending message' , error: error.member})
+        res.status(500).json({ message: 'Error sending message' , error: error.member })
+    }
+})
+
+router.get('/:groupId/messages', async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const user_id = req.user.name;
+
+        const [membership]
     }
 })
