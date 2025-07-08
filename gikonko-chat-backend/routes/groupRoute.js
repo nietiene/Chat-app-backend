@@ -65,5 +65,14 @@ router.get('/my', async (req, res) => {
 router.post('/:groupId/messages', async (req, res) => {
     try {
         const { content } = req.body;
+        const { groupId } = req.params;
+        const user_id = req.user.name;
+        
+        const created_at = new Date();
+
+        const [membership] = await db.query(
+            'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ? LIMIT 1',
+            [groupId, user_id]
+        )
     }
 })
