@@ -15,7 +15,6 @@ import groupRoutes from "./routes/groupRoute.js"
 import { getUserByName } from "./models/userModel.js";
 import db from "./models/db.js"
 import path from "path";
-import { type } from "os";
 
 dotenv.config();
 
@@ -39,7 +38,8 @@ const io = new Server(server, {
 app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-app.use(session({
+
+const sessionMiddleware = (session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -49,6 +49,10 @@ app.use(session({
         sameSite: "lax"
      }
 }));
+app.use(sessionMiddleware);
+
+const warp = middleware => (socket, next) => middleware(socket.request, {}, next);
+io.use(warp(sessionMiddleware));
 
 app.use('/api/auth', authRoutes);
 // app.use('/api/chat', chatRoutes);
@@ -95,7 +99,7 @@ io.on('connection', async (socket) => {
             io.to(`group_${g_id}`).emit('newGroupMessage', {
                 g_id,
                 user_id: socket.user_id,
-                sender_name: userGroup.name,
+                sender_name: userInGroup.name,
                 content,
                 type,
                 created_at: new Date().toISOString()
