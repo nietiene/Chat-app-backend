@@ -84,5 +84,15 @@ router.post('/:groupId/messages', async (req, res) => {
             'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, ?, ?, ?)',
             [user_id, 'text', content, 0, created_at, groupId]
         );
+
+        const message = await db.query (
+            'SELECT * FROM group_message WHERE g_m_id = ?',
+            [result.insertId]
+        );
+
+        res.status(201).json(message[0]);
+    } catch(error) {
+        console.error('Error sending group message:', error);
+        res.status(500).json({ message: 'Error sending message' , error: error.member})
     }
 })
