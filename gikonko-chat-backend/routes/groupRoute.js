@@ -73,6 +73,15 @@ router.post('/:groupId/messages', async (req, res) => {
         const [membership] = await db.query(
             'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ? LIMIT 1',
             [groupId, user_id]
+        );
+
+        if (membership.length === 0) {
+            return res.status(403).json({ error: 'You are not member of group' });
+        }
+
+        const [result] = await db.query (
+            //g_m_id	user_id	type	content	is_read	created_at	
+            'INSERT INTO group_message (g_id, )'
         )
     }
 })
