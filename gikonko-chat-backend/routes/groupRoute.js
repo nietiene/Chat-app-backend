@@ -35,6 +35,9 @@ router.post('/group_members/:g_id', async (req, res) => {
     const groupId = req.params.g_id;
     const { user_id } = req.body;
 
+    if (!user_id) {
+        return res.status(400).json({ error: 'user_id required' })
+    }
     try {
         await db.query(
             `INSERT INTO group_members (g_id, user_id, joined_at)
