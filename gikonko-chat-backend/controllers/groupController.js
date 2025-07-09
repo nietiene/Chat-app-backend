@@ -79,36 +79,42 @@ export async function getMyGroup(req, res) {
         res.status(500).json({ message: 'Failed to fetch groups' })
       }
 }
-
 export async function getGroupMessages(req, res) {
     const { g_id } = req.params;
-    const user_id = req.user.id;
+    const user_id = req.user?.id || req.session.user?.id; // Handle both auth methods
+
+    if (!user_id) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
 
     try {
+        // Verify group membership
         const [membership] = await db.query(
             'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ?',
             [g_id, user_id]
         );
-        if (!membership.length) {
-            return res.status(493).json({ message: 'Not a group member' });
-        }
         
-        const [message] = await db.query (
+        if (!membership.length) {
+            return res.status(403).json({ message: 'Not a group member' });
+        }
+
+        // Fetch messages
+        const [messages] = await db.query(
             `SELECT 
-                gm.g_m_id, 
+                gm.id, 
                 gm.user_id, 
                 u.name AS sender_name,
                 gm.type, 
                 gm.content, 
-                gm.is_read, 
                 gm.created_at
-             FROM group_message gm
+             FROM group_messages gm
              JOIN user u ON gm.user_id = u.user_id
              WHERE gm.g_id = ?
              ORDER BY gm.created_at ASC`,
             [g_id]
         );
-        res.json(message);
+        
+        res.json(messages);
     } catch (err) {
         console.error('Error fetching group messages:', err);
         res.status(500).json({ message: 'Failed to fetch group messages' });
@@ -116,21 +122,62 @@ export async function getGroupMessages(req, res) {
 }
 
 export async function sendGroupMessage(req, res) {
-    const { g_id, content, type = 'text' } = req.body;
-    const user_id = req.session.user.id;
+    const { g_id } = req.params;
+    const { content, type = 'text' } = req.body;
+    const user_id = req.user?.id || req.session.user?.id;
 
-    if (!g_id || !content) {
-        return res.status(400).json({ message: 'Group ID and content required' });
+    if (!user_id) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
 
+    if (!content) {
+        return res.status(400).json({ message: 'Content is required' });
+    }
+
+    const conn = await db.getConnection();
     try {
-        await db.query (
-            'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, 0, NOW(), ?)',
-            [user_id, type, content, g_id]
+        await conn.beginTransaction();
+
+        // Verify membership
+        const [[isMember]] = await conn.query(
+            'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ?',
+            [g_id, user_id]
         );
-        res.status(201).json({ message: 'Message sent' });
+        
+        if (!isMember) {
+            await conn.rollback();
+            return res.status(403).json({ message: 'Not a group member' });
+        }
+
+        // Insert message
+        const [result] = await conn.query(
+            'INSERT INTO group_messages (g_id, user_id, type, content, created_at) VALUES(?, ?, ?, ?, NOW())',
+            [g_id, user_id, type, content]
+        );
+
+        await conn.commit();
+        
+        // Return the created message
+        const [[message]] = await db.query(
+            `SELECT 
+                gm.id, 
+                gm.user_id, 
+                u.name AS sender_name,
+                gm.type, 
+                gm.content, 
+                gm.created_at
+             FROM group_messages gm
+             JOIN user u ON gm.user_id = u.user_id
+             WHERE gm.id = ?`,
+            [result.insertId]
+        );
+
+        res.status(201).json(message);
     } catch (err) {
+        await conn.rollback();
         console.error('Error sending group message', err);
         res.status(500).json({ message: 'Failed to send message' });
+    } finally {
+        conn.release();
     }
 }
