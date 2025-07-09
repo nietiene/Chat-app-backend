@@ -8,6 +8,6 @@ router.post('/', isAuthenticated, createGroup);
 router.get('/my', isAuthenticated, getMyGroup);
 
 router.get('/group-messages/:g_id', isAuthenticated, getGroupMessages);
-router.post('/group-messages', isAuthenticated, sendGroupMessage);
+router.post('/:g_id/messages', isAuthenticated, sendGroupMessage);
 
 export default router;
