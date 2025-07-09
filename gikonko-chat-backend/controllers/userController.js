@@ -12,3 +12,17 @@ export async function getAllUsers(req, res) {
 
      res.json(rows);
 }
+
+export const getCurrentUser = (req, res) => {
+   if (req.session.user) {
+      res.json({ name: req.session.user.name });
+   } else {
+      res.status(401).json({ eror: 'Not logged in'});
+   }
+}
+
+export const getGroupInfo = async (req, res) => {
+   const { g_id } = req.params;
+   const [[group]] = await pool.query("SELECT * FROM groups WHERE g_id = ?", [g_id]);
+   res.json(group); 
+}
