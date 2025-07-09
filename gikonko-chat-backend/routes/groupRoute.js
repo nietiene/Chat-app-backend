@@ -33,16 +33,24 @@ router.get('/group_members/:g_id', async (req, res) => {
 
 router.post('/group_members/:g_id', async (req, res) => {
     const groupId = req.params.g_id;
-    const { user_id } = req.body;
+    const { phone } = req.body;
 
-    if (!user_id) {
+    if (!phone) {
         return res.status(400).json({ error: 'user_id required' })
     }
     try {
+        const [user] = await db.query(
+            `SELECT user_id FROM user WHERE phone = ?`,
+            [phone]
+        )
+        if (!user.length) {
+            return res.status(404).json({ eror: 'user not found' });
+        }
+
         await db.query(
             `INSERT INTO group_members (g_id, user_id, joined_at)
             VALUES(?, ?, NOW())`,
-            [groupId, user_id]
+            [groupId, user[0].user_id]
         );
 
         res.json({ succes: true, message: 'Member added to gorup' });
