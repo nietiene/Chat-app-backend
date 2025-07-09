@@ -124,7 +124,7 @@ export async function getGroupMessages(req, res) {
 export async function sendGroupMessage(req, res) {
     const { g_id } = req.params;
     const { content, type = 'text' } = req.body;
-    const user_id = req.user?.id || req.session.user?.id;
+    const user_id = req.session.user.id;
 
     if (!user_id) {
         return res.status(401).json({ message: 'Unauthorized' });
