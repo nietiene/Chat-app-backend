@@ -2,12 +2,16 @@ import express from "express";
 import { createGroup, getMyGroup } from "../controllers/groupController.js";
 import { isAuthenticated } from "../controllers/auth.js";
 import { getGroupMessages, sendGroupMessage } from "../controllers/groupController.js";
+import { getCurrentUser } from "../controllers/userController.js";
+import { getGroupInfo } from "../controllers/userController.js";
 import db from "../models/db.js";
 
 const router = express.Router();
 
 router.post('/', isAuthenticated, createGroup);
 router.get('/my', isAuthenticated, getMyGroup);
+router.get('/me', isAuthenticated, getCurrentUser);
+router.get('/:g_id', isAuthenticated, getGroupInfo);
 
 router.get('/group-messages/:g_id', isAuthenticated, getGroupMessages);
 router.post('/:g_id/messages', isAuthenticated, sendGroupMessage);
