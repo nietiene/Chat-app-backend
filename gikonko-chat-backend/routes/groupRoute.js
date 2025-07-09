@@ -65,6 +65,17 @@ router.post('/group_members/:g_id', async (req, res) => {
 })
 
 router.delete('/group_members/:g_id/:user_id', async (req, res) => {
-    
+    const { g_id, user_id } = req.params;
+
+    try {
+        await db.query(
+            'DELETE FROM group_members WHERE g_id = ? AND user_id = ?',
+            [g_id, user_id]
+        );
+        res.json({ succes: true, message: 'Member removed from the group'});
+    } catch (error) {
+        console.error('Failed to remove goup', error);
+        res.status(500).json({ error: 'Failed to remvoe member' });
+    }
 })
 export default router;
