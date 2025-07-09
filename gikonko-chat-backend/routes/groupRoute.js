@@ -63,4 +63,8 @@ router.post('/group_members/:g_id', async (req, res) => {
         res.status(500).json({ error: 'Failed to add meber to group' });
     }
 })
+
+router.delete('/group_members/:g_id/:user_id', async (req, res) => {
+    
+})
 export default router;
