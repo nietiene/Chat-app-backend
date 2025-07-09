@@ -29,5 +29,23 @@ router.get('/group_members/:g_id', async (req, res) => {
         console.error("Error fetching group members", error);
         res.status(500).json({ error: 'Failed to fetch group members' });
     }
+});
+
+router.post('/group_members/:g_id', async (req, res) => {
+    const groupId = req.params.g_id;
+    const { user_id } = req.body;
+
+    try {
+        await db.query(
+            `INSERT INTO group_members (g_id, user_id, joined_at)
+            VALUES(?, ?, NOW())`,
+            [groupId, user_id]
+        );
+
+        res.json({ succes: true, message: 'Member added to gorup' });
+    } catch (error) {
+        console.error(error);
+        res.
+    }
 })
 export default router;
