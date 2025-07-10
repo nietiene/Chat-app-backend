@@ -80,6 +80,14 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
 })
 
 router.delete('/groupsgroup-messages/:g_m_id/', async (req, res) => {
-    
+    const { g_m_id } = req.params;
+
+    try {
+        const [result] = await db.query('DELETE FROM group_message WHERE g_m_id = ?', [g_m_id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Message not found' });
+        }
+        res.json({ message: 'Message deleted successfully' });
+    }
 })
 export default router;
