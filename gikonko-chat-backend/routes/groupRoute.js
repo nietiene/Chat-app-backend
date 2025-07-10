@@ -79,7 +79,7 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
     }
 })
 
-router.delete('/groupsgroup-messages/:g_m_id/', async (req, res) => {
+router.delete('/groups/group-messages/:g_m_id/', async (req, res) => {
     const { g_m_id } = req.params;
 
     try {
