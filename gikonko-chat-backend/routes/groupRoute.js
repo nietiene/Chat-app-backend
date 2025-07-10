@@ -88,6 +88,9 @@ router.delete('/groupsgroup-messages/:g_m_id/', async (req, res) => {
             return res.status(404).json({ message: 'Message not found' });
         }
         res.json({ message: 'Message deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting message', error);
+        res.status(500).json({ message: 'Server error' });
     }
 })
 export default router;
