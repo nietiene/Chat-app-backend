@@ -78,4 +78,8 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
         res.status(500).json({ error: 'Failed to remvoe member' });
     }
 })
+
+router.delete('/groupsgroup-messages/:g_m_id/', async (req, res) => {
+    
+})
 export default router;
