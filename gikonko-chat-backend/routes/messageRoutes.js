@@ -66,7 +66,7 @@ router.delete('/:m_id', async (req, res) => {
             return res.status(403).json({ message: 'Unauthorized'})
         }
 
-        const [rows] = await pool.query('SELECT sneder_id FROM messages WHERE m_id = ?', [m_id]);
+        const [rows] = await pool.query('SELECT sender_id FROM messages WHERE m_id = ?', [m_id]);
 
         if (rows.length === 0) {
             return res.status(494).json({ message: 'Message not deleted' })
