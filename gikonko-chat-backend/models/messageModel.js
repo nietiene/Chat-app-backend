@@ -10,17 +10,19 @@ export async function saveMessage(sender_id, receiver_id, content) {
 }
 
 export async function getMessagesBetweenUsers(user1_id, user2_id) {
-    const [messages] = await db.query(
-        `SELECT m.*, u1.name as sender_name, u2.name as receiver_name
+    // return only non deleted message
+    const [rows] = await pool.query(
+        `SELECT m.*, u.name AS sender_name 
          FROM messages m
-         JOIN user u1 ON m.sender_id = u1.user_id
-         JOIN user u2 ON m.receiver_id = u2.user_id
-         WHERE (m.sender_id = ? AND m.receiver_id = ?)
-         OR (m.sender_id = ? AND m.receiver_id = ?)
+         JOIN user u ON m.sender_id = u.user_id
+         WHERE 
+           ((m.sender_id = ? AND m.receiver_id = ?) OR 
+            (m.sender_id = ? AND m.receiver_id = ?))
+           AND m.is_deleted = FALSE
          ORDER BY m.created_at ASC`,
         [user1_id, user2_id, user2_id, user1_id]
     );
-    return messages;
+    return rows;
 }
 
 export async function markMessagesAsRead(sender_id, receiver_id) {

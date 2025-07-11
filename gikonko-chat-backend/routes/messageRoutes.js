@@ -56,31 +56,6 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:m_id', async (req, res) => {
-    const { m_id } = req.params;
 
-    try {
-        const currentUser = req.session.user;
-        const currentUserData = await getUserByName(currentUser.name);
-
-        if (!currentUser) {
-            return res.status(403).json({ message: 'Unauthorize' });
-        }
-
-        const [rows] = await pool.query('SELECT sender_id FROM messages WHERE m_id = ?', [m_id]);
-
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'Message not found' });
-        }
-
-        if (rows[0].sender_id !== currentUserData.user_id) {
-            return res.status(403).json({ message: 'You can only delete your message' });
-        };
-
-        await pool.query('DELETE FROM messages WHERE n_id = ?', [m_id]);
-        res.json({ message: 'Private message deleted successfully' });
-     } catch (err) {
-        console.error('Error in deleting message', error);
-        res.status(500).json({ message: 'Internal server error' });
-     }
 })
 export default router;
