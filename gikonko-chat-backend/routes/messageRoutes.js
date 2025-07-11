@@ -71,7 +71,16 @@ router.delete('/:m_id', async (req, res) => {
         if (rows.length === 0) {
             return res.status(494).json({ message: 'Message not deleted' })
         }
+        if (rows[0].sender_id !== currentUserData.user_id) {
+            return res.status(403).json({ message: 'You can only delete your own message' });
+        }
+
+        await pool.query('UPDATE messages SET is_deleted = TRUE where m_id = ?', [m_id]);
+
+        //emit delete event
+        req.app.get('io').emit('privateMessageDeleted', { m_id });
         
+        res.json({ message: 'Private message soft-deleted' });
     }
 
 })
