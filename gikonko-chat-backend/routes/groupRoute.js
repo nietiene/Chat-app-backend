@@ -96,8 +96,13 @@ router.delete('/groups/group-messages/:id', async (req, res) => {
         const [memberRows] = await db.query('SELECT * FROM group_members WHERE g_id =? AND user_id = ?', [g_id, currentUser]);
 
         if (memberRows.length === 0) {
-            return res.status()
+            return res.status(403).json({ message: 'Not a group member '});
         }
+
+        if (user_id !== currentUser) {
+            return res.status(403).json({ message: 'You can only delete your own message' });
+        }
+        
         const [result] = await db.query('DELETE FROM group_message WHERE id = ?', [id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Message not found' });
