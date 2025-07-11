@@ -81,6 +81,9 @@ router.delete('/:m_id', async (req, res) => {
         req.app.get('io').emit('privateMessageDeleted', { m_id });
         
         res.json({ message: 'Private message soft-deleted' });
+    } catch (error) {
+        console.error('Error in deleting message', error);
+        res.status(500).json({ message: 'Intenal server erro' });
     }
 
 })
