@@ -79,5 +79,17 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
     }
 })
 
+router.delete('/groups/group-messages/:id', async (req, res) => {
+    const { id } = req.params;
+    const currentUser = req.session.name;
+
+    try {
+        const [rows] = await db.query('SELECT user_id, g_id FROM group_messages WHERE id = ?', [id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Message not found'});
+        }
+    }
+})
 
 export default router;
