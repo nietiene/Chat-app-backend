@@ -69,6 +69,12 @@ router.post('/messages/:id',  async (req, res) => {
         if (rows[0].sender_name !== currentUser) {
             return res.json({ message: 'You can only delete you message' })
         }
+
+        await pool.query('DELETE FROM messages WHERE id = ?', [id]);
+
+        res.json({ message: 'Private message deleted successfully' });
+    } catch (eror) {
+        console.error('Error in deleting message', eror);
     }
 })
 export default router;
