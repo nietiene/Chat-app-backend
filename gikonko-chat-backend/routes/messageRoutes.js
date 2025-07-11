@@ -5,6 +5,7 @@ import {
     markMessagesAsRead
 } from '../models/messageModel.js';
 import { getUserByName } from '../models/userModel.js';
+import pool from '../models/db.js';
 
 const router = express.Router();
 
@@ -54,4 +55,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.post('/messages/:id',  async (req, res) => {
+    const { id } = req.params;
+    const currentUser = req.session.user.name;
+
+    try {
+        const [rows] = await pool.query('SELECT sender_name FROM messages WHERE id = ?', [id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Message not found' });
+        }
+
+        if (rows[0].sender_name !== currentUser) {
+            return res.json({ message: 'You can only delete you message' })
+        }
+    }
+})
 export default router;
