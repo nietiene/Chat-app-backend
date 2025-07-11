@@ -60,6 +60,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/groups', groupRoutes);
+app.set('io', io);
 
 const users = {};
 io.on('connection', async (socket) => {
