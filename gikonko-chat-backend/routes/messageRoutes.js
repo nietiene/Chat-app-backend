@@ -60,6 +60,10 @@ router.delete('/:m_id', async (req, res) => {
 
     try {
         const currentUser = req.session.user;
+        if (!currentUser || !currentUser.name) {
+             return res.status(403).json({ message: 'Unauthorized: No session user found' });
+        }
+        
         const currentUserData = await getUserByName(currentUser.name);
 
         if (!currentUserData) {
