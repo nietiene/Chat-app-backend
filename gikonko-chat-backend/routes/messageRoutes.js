@@ -56,6 +56,15 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:m_id', async (req, res) => {
+    const { m_id }  = req.params;
 
+    try {
+        const currentUser = req.session.user;
+        const currentUserData = await getUserByName(currentUser.name);
+
+        if (!currentUser) {
+            return res.status(403).json({ message: 'Unauthorized'})
+        }
+    }
 })
 export default router;
