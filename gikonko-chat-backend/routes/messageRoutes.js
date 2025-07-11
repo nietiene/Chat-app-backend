@@ -55,22 +55,22 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/messages/:id',  async (req, res) => {
-    const { id } = req.params;
+router.post('/messages/:m_id',  async (req, res) => {
+    const { m_id } = req.params;
     const currentUser = req.session.user.name;
 
     try {
-        const [rows] = await pool.query('SELECT sender_name FROM messages WHERE id = ?', [id]);
+        const [rows] = await pool.query('SELECT sender_id FROM messages WHERE m_id = ?', [m_id]);
 
         if (rows.length === 0) {
             return res.status(404).json({ message: 'Message not found' });
         }
 
-        if (rows[0].sender_name !== currentUser) {
+        if (rows[0].sender_id !== currentUser) {
             return res.json({ message: 'You can only delete you message' })
         }
 
-        await pool.query('DELETE FROM messages WHERE id = ?', [id]);
+        await pool.query('DELETE FROM messages WHERE m_id = ?', [m_id]);
 
         res.json({ message: 'Private message deleted successfully' });
     } catch (eror) {
