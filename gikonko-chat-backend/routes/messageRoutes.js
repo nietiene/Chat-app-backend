@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/messages/:m_id',  async (req, res) => {
+router.delete('/messages/:m_id',  async (req, res) => {
     const { m_id } = req.params;
     const currentUser = req.session.user.name;
 
