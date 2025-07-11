@@ -93,7 +93,7 @@ router.delete('/groups/group-messages/:id', async (req, res) => {
         const { user_id, g_id } = rows[0];
 
         const [memberCheck] = await db.query(
-            'SELECT * FROM group_members WHERE g_id = ? AND user_id',
+            'SELECT * FROM group_members WHERE g_id = ? AND user_id = ?',
             [g_id, currentUser]
         );
 
