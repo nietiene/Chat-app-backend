@@ -62,9 +62,17 @@ router.delete('/:m_id', async (req, res) => {
         const currentUser = req.session.user;
         const currentUserData = await getUserByName(currentUser.name);
 
-        if (!currentUser) {
+        if (!currentUserData) {
             return res.status(403).json({ message: 'Unauthorized'})
         }
+
+        const [rows] = await pool.query('SELECT sneder_id FROM messages WHERE m_id = ?', [m_id]);
+
+        if (rows.length === 0) {
+            return res.status(494).json({ message: 'Message not deleted' })
+        }
+        
     }
+
 })
 export default router;
