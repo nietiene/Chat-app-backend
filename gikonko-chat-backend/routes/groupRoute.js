@@ -106,8 +106,10 @@ router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
         return res.status(403).json({ message: 'You can only delete your message' });
     }
 
-    await db.query('DELETE FROM group_messages WHERE id = ?', [id]);
+    await db.query('UPDATE group_messages SET is_deleted = TRUE WHERE id = ?', [id]);
 
+    req.app.get('io').emit('groupMessageDeleted', { id });
+    
     res.json({ message: 'Message deleted successfully' });
   
   } catch (error) {
