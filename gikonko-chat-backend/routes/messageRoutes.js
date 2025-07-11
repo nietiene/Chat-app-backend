@@ -61,6 +61,12 @@ router.delete('/:m_id', async (req, res) => {
     try {
         const currentUser = req.session.user;
         const currentUserData = await getUserByName(currentUser.name);
+
+        if (!currentUser) {
+            return res.status(403).json({ message: 'Unauthorize' });
+        }
+
+        const [rows] = await pool.query()
      }
 })
 export default router;
