@@ -81,7 +81,7 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
 
 router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
-    const currentUserId = req.session.userId;
+    const currentUserId = req.session.user.id;
 
     console.log(`Delete request: User ${currentUserId} deleting message ${id}`);
 
