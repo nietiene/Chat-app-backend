@@ -98,7 +98,7 @@ export async function getGroupMessages(req, res) {
             return res.status(403).json({ message: 'Not a group member' });
         }
 
-        // Fetch messages
+        // Fetch only non-deleted messages
         const [messages] = await db.query(
             `SELECT 
                 gm.id, 
@@ -109,7 +109,7 @@ export async function getGroupMessages(req, res) {
                 gm.created_at
              FROM group_messages gm
              JOIN user u ON gm.user_id = u.user_id
-             WHERE gm.g_id = ?
+             WHERE gm.g_id = ? AND gm.is_deleted = FALSE
              ORDER BY gm.created_at ASC`,
             [g_id]
         );
