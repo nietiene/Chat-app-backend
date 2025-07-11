@@ -81,13 +81,12 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
 
 router.delete('/group-messages/:id', async (req, res) => {
     const { id } = req.params;
-    const currentUser = req.session.name;
+    const currentUserId = req.session.userId;
 
-    console.log('Trying to delete group message with ID:', id, 'by user:', currentUser);
+    console.log(`Delete request: User ${currentUserId} deleting message ${id}`);
 
     try {
-        const [rows] = await db.query('SELECT user_id, g_id FROM group_messages WHERE id = ?', [id]);
-        console.log('DB lookup result:', rows);
+        const [messageRows] = await db.query('SELECT user_id, g_id FROM group_messages WHERE id = ?', [id]);
 
         if (rows.length === 0) {
             return res.status(404).json({ message: 'Message not found'});
