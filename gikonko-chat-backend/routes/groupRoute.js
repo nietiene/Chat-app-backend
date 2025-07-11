@@ -101,7 +101,7 @@ router.delete('/group-messages/:id', async (req, res) => {
         );
 
         if (memberCheck.length === 0) {
-            return res.status(493).json({ message: 'Not a group member' });
+            return res.status(403).json({ message: 'Not a group member' });
         }
        if (user_id !== currentUser) {
         return res.status(403).json({ message: 'You can only delete your message' });
