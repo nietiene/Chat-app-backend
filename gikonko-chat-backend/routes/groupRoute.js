@@ -92,7 +92,7 @@ router.delete('/group-messages/:id', async (req, res) => {
             return res.status(404).json({ message: 'Message not found'});
         }
 
-        const { g_id: groupId, userId: messageOwnerId } = messageRows[0];
+        const { g_id: groupId, user_id: messageOwnerId } = messageRows[0];
 
         const [memberRows] = await db.query(
             'SELECT * FROM group_members WHERE g_id = ? AND user_id = ?',
