@@ -146,6 +146,17 @@ router.patch('/:g_id/soft-delete', async (req, res) => {
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Group not found or already deleted' })
         }
+
+        if (rows[0].created_by !== userId) {
+            return res.status(403).json({ error: 'Not authorized to delete the group' });
+        }
+
+        await db.query('UPDATE groups SET is_deleted = 1 WHERE g_id = ?', [g_id]);
+
+        res.json({ succes: true, message: 'Group deleted successfully' });
+    } catch (error) {
+        console.error('Error in deleting soft delete', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 })
 
