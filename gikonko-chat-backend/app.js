@@ -66,6 +66,13 @@ const users = {};
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
 
+ socket.on('deletePrivateMessage', ({ m_id }) => {
+    io.emit('privateMessageDeleted', { m_id });
+});
+
+socket.on('deleteGroupMessage', ({ m_id }) => {
+    io.emit('groupMessageDeleted', { m_id });
+});
     socket.on('login', async (username) => {
         try {
             const user = await getUserByName(username);
