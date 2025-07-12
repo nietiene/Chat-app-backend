@@ -136,4 +136,13 @@ router.delete('/leave/:g_id', async (req, res) => {
     }
 })
 
+router.patch('/:g_id/soft-delete', async (req, res) => {
+    const{ g_id } = req.params;
+    const userId = req.session.user.id;
+
+    try {
+        const [rows] = await db.query('SELECT created_by FROM groups WHERE')
+    }
+})
+
 export default router;
