@@ -110,14 +110,6 @@ io.on('connection', async (socket) => {
         }
     })
 
-    socket.on('deletePrivateMessage', ({ m_id }) => {
-        io.emit('deletePrivateMessage', { m_id });
-    });
-
-    socket.on('deleteGroupMessage', ({ id }) => {
-        io.emit('deleteGroupMessage', { id });
-    })
-
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
             const sender = await getUserByName(from);
