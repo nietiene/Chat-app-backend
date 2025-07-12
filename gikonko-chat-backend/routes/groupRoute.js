@@ -125,7 +125,7 @@ router.delete('/leave/:g_id', async (req, res) => {
 
     try {
         await db.query(
-            'UPDATE group_members SET left_at = NOW() WHERE user_id = ? AND g_id = ?', [user_id, g_id]
+            'UPDATE group_members SET left_at = NOW(), leavet_at = TRUE WHERE user_id = ? AND g_id = ?', [user_id, g_id]
         );
         res.json({ message: 'Left group successfully'});
     } catch (error) {
