@@ -120,14 +120,6 @@ io.on('connection', async (socket) => {
                 return;
             }
 
-            // Save to database first
-            const messageId = await saveMessage(
-                sender.user_id,
-                receiver.user_id,
-                message
-            );
-            console.log('Message saved with ID:', messageId);
-
             // Deliver to recipient if online
             if (users[to]) {
                 io.to(users[to]).emit('privateMessage', { 
