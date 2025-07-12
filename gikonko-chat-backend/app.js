@@ -70,8 +70,8 @@ io.on('connection', async (socket) => {
     io.emit('privateMessageDeleted', { m_id });
 });
 
-socket.on('deleteGroupMessage', ({ m_id }) => {
-    io.emit('groupMessageDeleted', { m_id });
+socket.on('deleteGroupMessage', ({ id }) => {
+    io.emit('groupMessageDeleted', { id });
 });
     socket.on('login', async (username) => {
         try {
