@@ -130,7 +130,7 @@ router.delete('/leave/:g_id', async (req, res) => {
         res.json({ message: 'Left group successfully'});
     } catch (error) {
         console.error(error);
-        
+        res.status(500).json({ message: 'Error leaving group' });
     }
 })
 
