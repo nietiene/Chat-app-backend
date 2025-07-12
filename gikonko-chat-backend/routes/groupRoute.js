@@ -119,4 +119,15 @@ router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
 
 })
 
+router.delete('/leave/:g_id', async (req, res) => {
+    const user_id = req.session.user.id;
+    const g_id = req.params.g_id;
+
+    try {
+        await db.query(
+            'UPDATE group_members SET leaved_at'
+        )
+    }
+})
+
 export default router;
