@@ -24,7 +24,9 @@ router.get('/group_members/:g_id', async (req, res) => {
             `SELECT gm.user_id, u.name
             FROM group_members gm 
             JOIN user u ON u.user_id = gm.user_id
-            WHERE gm.g_id = ?`,
+            WHERE gm.g_id = ? 
+            AND gm.left_at IS NULL
+            AND (gm.is_leaved IS NULL OR gm.is_leaved = FALSE)`,
             [groupId]
         );
 
