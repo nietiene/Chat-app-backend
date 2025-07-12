@@ -141,7 +141,11 @@ router.patch('/:g_id/soft-delete', async (req, res) => {
     const userId = req.session.user.id;
 
     try {
-        const [rows] = await db.query('SELECT created_by FROM groups WHERE')
+        const [rows] = await db.query('SELECT created_by FROM groups WHERE g_id = ? AND is_deleted = 0', [g_id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Group not found or already deleted' })
+        }
     }
 })
 
