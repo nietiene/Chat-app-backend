@@ -125,7 +125,7 @@ router.delete('/leave/:g_id', async (req, res) => {
 
     try {
         await db.query(
-            'UPDATE group_members SET leaved_at'
+            'UPDATE group_members SET left_at'
         )
     }
 })
