@@ -237,6 +237,9 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-const storage = 
 
+
+router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('photo'), async (req, res) => {
+    
+})
 export default router;
