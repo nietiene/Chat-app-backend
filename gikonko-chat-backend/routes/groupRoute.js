@@ -192,7 +192,7 @@ router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
     }
 })
 
-router.patch('rename/:g_id/name', async (req, res) => {
+router.patch('/rename/:g_id/name', async (req, res) => {
     const { g_id } = req.params;
     const { group_name } = req.body;
     const user_id = req.session.user.id;
