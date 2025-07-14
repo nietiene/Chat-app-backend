@@ -232,4 +232,11 @@ router.patch('/rename/:g_id/name', async (req, res) => {
 })
 
 
+//for handling changing of group photo
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const storage = 
+
 export default router;
