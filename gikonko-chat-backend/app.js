@@ -55,7 +55,6 @@ const warp = middleware => (socket, next) => middleware(socket.request, {}, next
 io.use(warp(sessionMiddleware));
 
 app.use('/api/auth', authRoutes);
-// app.use('/api/chat', chatRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);

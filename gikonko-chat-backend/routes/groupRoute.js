@@ -193,6 +193,8 @@ router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
 })
 
 router.patch('/rename/:g_id/name', async (req, res) => {
+    console.log("Route hit!");
+    
     const { g_id } = req.params;
     const { group_name } = req.body;
     const user_id = req.session.user.id;
@@ -205,6 +207,7 @@ router.patch('/rename/:g_id/name', async (req, res) => {
         const [group] = await db.query (
             'SELECT * FROM groups WHERE  g_id = ? AND is_deleted = 0',
             [g_id]
+
         );
 
         if (!group.length) {
