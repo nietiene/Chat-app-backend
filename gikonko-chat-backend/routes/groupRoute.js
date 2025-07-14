@@ -75,13 +75,21 @@ router.post('/group_members/:g_id', async (req, res) => {
             WHERE g_id = ? AND user_id = ?`,
             [groupId, userId]
         );
-
-        
-        await db.query(
+  
+        if (previousMember.length > 0) {
+            //update existing record
+            await db.query(
+                `UPDATE group_members
+                SET joined_at = NOW(), left_at = NULL, is_leaved = FALSE
+                WHERE g_id = ? AND user_id = ?`,
+            [groupId, userId]);
+        } else {
+            await db.query(
             `INSERT INTO group_members (g_id, user_id, joined_at)
             VALUES(?, ?, NOW())`,
-            [groupId, user[0].user_id]
+            [groupId, userId]
         );
+        }
 
         res.json({ succes: true, message: 'Member added to gorup' });
     } catch (error) {
