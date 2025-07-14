@@ -59,7 +59,7 @@ router.post('/group_members/:g_id', async (req, res) => {
         const [existingMember] = await db.query(
             `SELECT * FROM group_members
             WHERE g_id = ? AND user_id = ?
-            AND (left_at IS NULL OR AND is_leaved = FALSE)`,
+            AND (left_at IS NULL AND is_leaved = FALSE)`,
             [groupId, userId]
         )
 
