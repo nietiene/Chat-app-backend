@@ -208,8 +208,23 @@ router.patch('/:g_id/name', async (req, res) => {
         );
 
         if (!group.length) {
-            
+            return res.status(404).json({ message: 'Group not found' });
         }
+
+        if (group[0].created_by !== user_id) {
+            return res.status(403).json({ message: 'Unauthorized: not a group creator' });
+        }
+
+        await db.query(
+            'UPDATE groups SET group_name = ? WHERE g_id = ?',
+            [group_name.trim(), g_id]
+        );
+
+        res.json({ message: 'Group name updated successfully' });
+    
+    } catch (err) {
+        console.error('Error updating group name:', err);
+        res.status(500).json({ message: 'Internal server error' });
     }
 })
 
