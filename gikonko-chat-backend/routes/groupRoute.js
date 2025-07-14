@@ -192,4 +192,14 @@ router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
     }
 })
 
+router.patch('/:g_id/name', async (req, res) => {
+    const { g_id } = req.params;
+    const { group_name } = req.body;
+    const user_id = req.session.user.id;
+
+    if (!group_name || !group_name.trim()) {
+        return res.status(400).json({ message: 'Group name required' });
+    }
+})
+
 export default router;
