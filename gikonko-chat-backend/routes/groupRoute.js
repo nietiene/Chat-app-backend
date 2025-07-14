@@ -200,6 +200,18 @@ router.patch('/:g_id/name', async (req, res) => {
     if (!group_name || !group_name.trim()) {
         return res.status(400).json({ message: 'Group name required' });
     }
+
+    try {
+        const [group] = await db.query (
+            'SELECT * FROM groups WHERE  g_id = ? AND deleted = 0',
+            [g_id]
+        );
+
+        if (!group.length) {
+            
+        }
+    }
 })
+
 
 export default router;
