@@ -64,8 +64,19 @@ router.post('/group_members/:g_id', async (req, res) => {
         )
 
         if (existingMember.length > 0) {
-            return
+            return res.json(400).json({
+                error: 'User is already a member of this group'
+            })
         }
+
+        // check if user was previous member to update instead of insert
+        const [previousMember] = await db.query(
+            `SELECT * FROM group_members
+            WHERE g_id = ? AND user_id = ?`,
+            [groupId, userId]
+        );
+
+        
         await db.query(
             `INSERT INTO group_members (g_id, user_id, joined_at)
             VALUES(?, ?, NOW())`,
