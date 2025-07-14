@@ -179,7 +179,6 @@ router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
             return res.status(404).json({ error: 'Group not found or already deleted' })
         }
 
-        console.log(`User ${req.session.user.id} attempting to delete group created by ${rows[0].created_by}`);
         if (rows[0].created_by !== userId) {
             return res.status(403).json({ error: 'Not authorized to delete the group' });
         }
