@@ -240,6 +240,15 @@ import fs from "fs";
 
 
 router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('photo'), async (req, res) => {
-    
+    const { g_id } = req.params;
+    const userId = req.session.user.id;
+
+    try {
+        const [rows] = db.query('SELECT * FROM groups WHERE g_id = ? AND is_deleted = ?', [g_id]);
+
+        if (!rows.length) {
+            
+        }
+    }
 })
 export default router;
