@@ -234,11 +234,10 @@ router.patch('/rename/:g_id/name', async (req, res) => {
 
 //for handling changing of group photo
 import multer from "multer";
-import path from "path";
 import fs from "fs";
 
 // ensure upload folder is exists
-const uploadDir = 'upload/';
+const uploadDir = 'uploads/group';
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -258,7 +257,7 @@ router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('
     const userId = req.session.user.id;
 
     try {
-        const [rows] = db.query('SELECT * FROM groups WHERE g_id = ? AND is_deleted = 0', [g_id]);
+        const [rows] = await db.query('SELECT * FROM groups WHERE g_id = ? AND is_deleted = 0', [g_id]);
 
         if (!rows.length) {
             res.status(404).json({ message: 'Group not found' });
@@ -275,7 +274,7 @@ router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('
         }
 
         const photoPath = `/uploads/group/${req.file.filename}`;
-        await db.query('UPDATE groups SET group_photo = ? WHERE g_id = ?', [photoPath]);
+        await db.query('UPDATE groups SET group_photo = ? WHERE g_id = ?', [photoPath, g_id]);
 
         res.json({ message: 'Group photo updated', photoPath});
     
