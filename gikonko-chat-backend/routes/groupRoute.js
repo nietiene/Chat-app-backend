@@ -168,9 +168,10 @@ router.delete('/leave/:g_id', isAuthenticated, async (req, res) => {
     }
 })
 
-router.patch('/:g_id/soft-delete', async (req, res) => {
+router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
     const{ g_id } = req.params;
     const userId = req.session.user.id;
+    console.log('Session data:', req.session);
 
     try {
         const [rows] = await db.query('SELECT created_by FROM groups WHERE g_id = ? AND is_deleted = 0', [g_id]);
@@ -179,6 +180,8 @@ router.patch('/:g_id/soft-delete', async (req, res) => {
             return res.status(404).json({ error: 'Group not found or already deleted' })
         }
 
+        console.log(`User ${req.session.user.id} attempting to delete group created by ${rows[0].created_by}`);
+        
         if (rows[0].created_by !== userId) {
             return res.status(403).json({ error: 'Not authorized to delete the group' });
         }
