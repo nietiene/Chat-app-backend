@@ -192,7 +192,7 @@ router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
     }
 })
 
-router.put('/rename/:g_id/name', async (req, res) => {
+router.patch('/rename/:g_id/name', async (req, res) => {
     console.log("Route hit!");
     
     const { g_id } = req.params;
