@@ -69,7 +69,8 @@ export async function getMyGroup(req, res) {
            JOIN groups g ON g.g_id = gm.g_id
            WHERE gm.user_id = ?
            AND gm.left_at IS NULL
-           AND (gm.is_leaved IS NULL OR gm.is_leaved = FALSE)`,
+           AND (gm.is_leaved IS NULL OR gm.is_leaved = FALSE)
+           AND g.is_deleted = 0`,
       [user_id]
     );
  
