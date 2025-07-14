@@ -91,7 +91,7 @@ router.post('/group_members/:g_id', async (req, res) => {
         );
         }
 
-        res.json({ succes: true, message: 'Member added to gorup' });
+        res.json({ success: true, message: 'Member added to gorup' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to add meber to group' });
