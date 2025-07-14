@@ -203,7 +203,7 @@ router.patch('/rename/:g_id/name', async (req, res) => {
 
     try {
         const [group] = await db.query (
-            'SELECT * FROM groups WHERE  g_id = ? AND deleted = 0',
+            'SELECT * FROM groups WHERE  g_id = ? AND is_deleted = 0',
             [g_id]
         );
 
