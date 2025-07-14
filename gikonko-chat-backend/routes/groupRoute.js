@@ -264,6 +264,10 @@ router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('
         await db.query('UPDATE groups SET group_photo = ? WHERE g_id = ?', [photoPath]);
 
         res.json({ message: 'Group photo updated', photoPath});
-    } catch
+    
+    } catch (error) {
+        console.error('Failed to update group photo', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 })
 export default router;
