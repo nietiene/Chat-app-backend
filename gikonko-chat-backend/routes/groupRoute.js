@@ -53,6 +53,19 @@ router.post('/group_members/:g_id', async (req, res) => {
             return res.status(404).json({ eror: 'user not found' });
         }
 
+        const userId = user[0].user_id;
+
+        //check if user already active member
+        const [existingMember] = await db.query(
+            `SELECT * FROM group_members
+            WHERE g_id = ? AND user_id = ?
+            AND (left_at IS NULL OR AND is_leaved = FALSE)`,
+            [groupId, userId]
+        )
+
+        if (existingMember.length > 0) {
+            return
+        }
         await db.query(
             `INSERT INTO group_members (g_id, user_id, joined_at)
             VALUES(?, ?, NOW())`,
