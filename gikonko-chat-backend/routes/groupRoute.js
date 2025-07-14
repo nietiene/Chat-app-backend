@@ -247,8 +247,23 @@ router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('
         const [rows] = db.query('SELECT * FROM groups WHERE g_id = ? AND is_deleted = ?', [g_id]);
 
         if (!rows.length) {
-            
+            res.status(404).json({ message: 'Group not found' });
+
         }
-    }
+
+        const group = rows[0];
+        if (group.created_by !== userId) {
+            return res.status(401).json({ message: 'Forbidden: not a group creator' });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ message: 'No photo uploaded' });
+        }
+
+        const photoPath = `/uploads/group/${req.file.filename}`;
+        await db.query('UPDATE groups SET group_photo = ? WHERE g_id = ?', [photoPath]);
+
+        res.json({ message: 'Group photo updated', photoPath});
+    } catch
 })
 export default router;
