@@ -64,7 +64,7 @@ router.post('/group_members/:g_id', async (req, res) => {
         )
 
         if (existingMember.length > 0) {
-            return res.json(400).json({
+            return res.status(400).json({
                 error: 'User is already a member of this group'
             })
         }
@@ -153,7 +153,7 @@ router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
 
 })
 
-router.delete('/leave/:g_id', async (req, res) => {
+router.delete('/leave/:g_id', isAuthenticated, async (req, res) => {
     const user_id = req.session.user.id;
     const g_id = req.params.g_id;
 
