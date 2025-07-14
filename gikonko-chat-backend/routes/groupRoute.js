@@ -246,7 +246,7 @@ if (!fs.existsSync(uploadDir)) {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
     filename: (req, file, cb) => {
-        const safeName = Date.now() + '-' + file.replace(/\s+/g, '-'); 
+        const safeName = Date.now() + '-' + file.originalname.replace(/\s+/g, '-'); 
         cb(null, safeName)
        }
 });
@@ -258,7 +258,7 @@ router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('
     const userId = req.session.user.id;
 
     try {
-        const [rows] = db.query('SELECT * FROM groups WHERE g_id = ? AND is_deleted = ?', [g_id]);
+        const [rows] = db.query('SELECT * FROM groups WHERE g_id = ? AND is_deleted = 0', [g_id]);
 
         if (!rows.length) {
             res.status(404).json({ message: 'Group not found' });
