@@ -3,12 +3,6 @@ import multer from "multer";
 import db from "../models/db.js";
 const router = express.Router();
 
-
-// ensure upload folder is exists
-const uploadDir = 'upload/';
-if (!fs.existsSync(uploadDir)) {
-    
-}
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, "uploads/"),
     filename: (req, file, cb) => {
