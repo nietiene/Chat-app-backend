@@ -237,6 +237,18 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
+// ensure upload folder is exists
+const uploadDir = 'upload/';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => {
+        const safeName = Date.now() + '-' + file.originalname
+    }
+})
 
 
 router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('photo'), async (req, res) => {
