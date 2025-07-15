@@ -15,7 +15,8 @@ export async function getAllUsers(req, res) {
 
 export const getCurrentUser = (req, res) => {
    if (req.session.user) {
-      res.json({ name: req.session.user.name });
+      const { id, name } = req.session.user;
+      res.json({ id, name });
    } else {
       res.status(401).json({ eror: 'Not logged in'});
    }
