@@ -64,7 +64,7 @@ export async function getMyGroup(req, res) {
 
       try {
          const [groups] = await db.query(
-          `SELECT g.g_id, g.group_name, g.created_by, g.created_at
+          `SELECT g.g_id, g.group_name, g.created_by, g.created_at, g.group_photo
            FROM group_members gm
            JOIN groups g ON g.g_id = gm.g_id
            WHERE gm.user_id = ?
