@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
         );
 
        const [[fullMessage]] = await pool.query(
-        `SELECT M*, u.name AS sender_name
+        `SELECT m.*, u.name AS sender_name
         FROM messages m
         JOIN user u ON m.sender_id = u.user_id
         WHERE m.m_id = ?`,
