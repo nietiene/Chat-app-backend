@@ -64,14 +64,21 @@ export async function getMyGroup(req, res) {
 
       try {
          const [groups] = await db.query(
-          `SELECT g.g_id, g.group_name, g.created_by, g.created_at, g.group_photo
-           FROM group_members gm
-           JOIN groups g ON g.g_id = gm.g_id
-           WHERE gm.user_id = ?
-           AND gm.left_at IS NULL
-           AND (gm.is_leaved IS NULL OR gm.is_leaved = FALSE)
-           AND g.is_deleted = 0`,
-      [user_id]
+             `SELECT 
+              g.g_id, 
+              g.group_name, 
+              g.created_by, 
+              u.name AS creator_name,
+              g.created_at, 
+              g.group_photo
+             FROM group_members gm
+             JOIN groups g ON g.g_id = gm.g_id
+             JOIN user u ON g.created_by = u.user_id
+             WHERE gm.user_id = ?
+             AND gm.left_at IS NULL
+             AND (gm.is_leaved IS NULL OR gm.is_leaved = FALSE)
+             AND g.is_deleted = 0`,
+            [user_id]
     );
  
         res.json(groups);
