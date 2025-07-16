@@ -49,8 +49,11 @@ router.post('/', async (req, res) => {
         `SELECT M*, u.name AS sender_name
         FROM messages m
         JOIN user u ON m.sender_id = u.user_id
-        WHERE m.m_id = ?`
-       )
+        WHERE m.m_id = ?`,
+        [messageId]
+       );
+       
+       res.status(201).json(fullMessage);
     } catch (error) {
         console.error('Error sending message:', error);
         res.status(500).json({ error: 'Failed to send message' });
