@@ -45,10 +45,12 @@ router.post('/', async (req, res) => {
             content
         );
 
-        res.status(201).json({ 
-            success: true,
-            messageId 
-        });
+       const [[fullMessage]] = await pool.query(
+        `SELECT M*, u.name AS sender_name
+        FROM messages m
+        JOIN user u ON m.sender_id = u.user_id
+        WHERE m.m_id = ?`
+       )
     } catch (error) {
         console.error('Error sending message:', error);
         res.status(500).json({ error: 'Failed to send message' });
