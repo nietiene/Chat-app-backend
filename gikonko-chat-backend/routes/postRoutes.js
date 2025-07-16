@@ -61,9 +61,5 @@ router.get("/", async (req, res) => {
            
 })
 
-router.get('/profileInfo/:sender_id', (req, res) => {
-     const { sender_id } = req.params;
-     
-})
 
 export default router;
