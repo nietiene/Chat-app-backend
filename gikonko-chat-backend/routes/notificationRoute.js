@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../models/db";
+import pool from "../models/db.js";
 
 const router = express.Router();
 
@@ -22,5 +22,9 @@ router.get('/notification/:user_id', async (req, res) => {
 
 // Mark as readed
 router.post('/notification/mark-read/:user_id', async (req, res) => {
-    const { user_id } = 
+    const { user_id } = req.params;
+
+    try {
+        await pool.query
+    }
 })
