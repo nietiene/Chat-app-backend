@@ -113,7 +113,7 @@ router.patch ('/mark-as-unread', async (req, res) => {
 router.get('/last/:name', async (req, res) => {
 
     try {
-        const { name } = decodeURIComponent(req.params.name);
+        const name = decodeURIComponent(req.params.name);
        
         const userData = await getUserByName(name);
        
