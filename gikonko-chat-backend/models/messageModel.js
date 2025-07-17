@@ -1,9 +1,10 @@
+import router from '../routes/messageRoutes.js';
 import db from './db.js';
 
 export async function saveMessage(sender_id, receiver_id, content) {
     const [result] = await db.query(
-        `INSERT INTO messages (sender_id, receiver_id, content) 
-         VALUES (?, ?, ?)`,
+        `INSERT INTO messages (sender_id, receiver_id, content, is_read) 
+         VALUES (?, ?, ?, ?)`,
         [sender_id, receiver_id, content]
     );
     return result.insertId;
@@ -27,7 +28,7 @@ export async function getMessagesBetweenUsers(user1_id, user2_id) {
 
 export async function markMessagesAsRead(sender_id, receiver_id) {
     await db.query(
-        `UPDATE messages SET read = 1 
+        `UPDATE messages SET is_read = 1 
          WHERE sender_id = ? AND receiver_id = ? AND is_read = 0`,
         [sender_id, receiver_id]
     );
