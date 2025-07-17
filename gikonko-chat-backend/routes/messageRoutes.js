@@ -110,7 +110,7 @@ router.patch ('/mark-as-unread', async (req, res) => {
     }
 })
 
-router.get('/last/:username', async (req, res) => {
+router.get('/last/:name', async (req, res) => {
     try {
         const { name } = req.params;
         const userData = await getUserByName(name);
