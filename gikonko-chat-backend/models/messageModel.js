@@ -34,7 +34,7 @@ export async function markMessagesAsRead(sender_id, receiver_id) {
 }
 
 
-export async function getMessageForUser(userId) {
+export async function getLastMessageForUser(userId) {
           const [rows] = await db.query(
             `SELECT m.*, u.name AS sender_name, u2.name AS receiver_name
             FROM messages m
@@ -53,5 +53,7 @@ export async function getMessageForUser(userId) {
                 WHERE M.is_deleted = FALSE
                 ORDER BY m.created_at DESC`,
                 [userId, userId]
-          )
+          );
+
+          return rows;
 }

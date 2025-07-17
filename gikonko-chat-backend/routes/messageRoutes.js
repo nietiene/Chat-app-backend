@@ -2,7 +2,8 @@ import express from 'express';
 import { 
     saveMessage, 
     getMessagesBetweenUsers,
-    markMessagesAsRead
+    markMessagesAsRead,
+    getLastMessageForUser
 } from '../models/messageModel.js';
 import { getUserByName } from '../models/userModel.js';
 import pool from '../models/db.js';
