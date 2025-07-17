@@ -111,6 +111,8 @@ router.patch ('/mark-as-unread', async (req, res) => {
 })
 
 router.get('/last/:name', async (req, res) => {
+    console.log('Received request for name:', req.params.name);
+
     try {
         const { name } = req.params;
         const userData = await getUserByName(name);
