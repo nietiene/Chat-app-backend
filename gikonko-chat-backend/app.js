@@ -139,7 +139,7 @@ socket.on('deleteGroupMessage', ({ id }) => {
             // Deliver to recipient if online
             if (users[to]) {
                 io.to(users[to]).emit('privateMessage', messageData);
-                io.to(users[0]).emit('unreadMessage', messageData); // new unread event
+                io.to(users[to]).emit('unreadMessage', messageData); // new unread event
             }
 
             // Send confirmation back to sender
