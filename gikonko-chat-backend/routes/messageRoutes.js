@@ -111,14 +111,19 @@ router.patch ('/mark-as-unread', async (req, res) => {
 })
 
 router.get('/last/:name', async (req, res) => {
-    console.log('Received request for name:', req.params.name);
 
     try {
-        const { name } = req.params;
+        const { name } = decodeURIComponent(req.params.name);
+       
         const userData = await getUserByName(name);
+       
+        console.log('Searching for user:', name);
 
         if (!userData) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ 
+                error: 'User not found',
+                searchedName: name,
+            });
         } 
 
         const lastMessages = await getLastMessageForUser(userData.user_id);
