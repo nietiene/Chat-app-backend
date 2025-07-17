@@ -25,6 +25,13 @@ router.post('/notification/mark-read/:user_id', async (req, res) => {
     const { user_id } = req.params;
 
     try {
-        await pool.query
+        await pool.query (
+            'UPDATE notifications SET is_read = 1 WHERE receiver_id = ?',
+            [user_id]
+        );
+        res.sendStatus(200);
+
+    } catch (error) {
+       res.status(500).json('Error marking notification as read')
     }
 })
