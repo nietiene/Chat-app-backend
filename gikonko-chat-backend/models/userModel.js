@@ -23,7 +23,7 @@ export async function findUserByPhone(phone) {
 
 export async function getUserByName(name) {
 
-    const trimedName = name.trim().toLowerCase();
+    const trimedName = name.trim();
     const [rows] = await pool.query('SELECT * FROM user WHERE name = ?', [trimedName]);
     return rows[0];
 }
