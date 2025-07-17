@@ -98,21 +98,21 @@ router.delete('/:m_id', async (req, res) => {
 
 })
 
-// router.patch ('/mark-as-unread', async (req, res) => {
-//     const { sender_id, receiver_id } = req.body;
+router.patch ('/mark-as-unread', async (req, res) => {
+    const { sender_id, receiver_id } = req.body;
 
-//     try {
-//         await markMessagesAsRead(sender_id, receiver_id);
-//         res.json({ success: true });
-//     } catch (err) {
-//         console.error('Error marking messages as read', err);
-//         res.status(500).json({ message: 'Failed to mark as read' });
-//     }
-// })
+    try {
+        await markMessagesAsRead(sender_id, receiver_id);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error marking messages as read', err);
+        res.status(500).json({ message: 'Failed to mark as read' });
+    }
+})
 
 router.get('/last-by-id/:userId', async (req, res) => {
-    console.log(`Received request for userId: ${req.params.userId}`);
-   const userId = req.params.userId;
+
+    const userId = req.params.userId;
 
    try {
 
