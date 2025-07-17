@@ -109,4 +109,21 @@ router.patch ('/mark-as-unread', async (req, res) => {
         res.status(500).json({ message: 'Failed to mark as read' });
     }
 })
+
+router.get('/last/:username', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const userData = await getUserByName(name);
+
+        if (!userData) {
+            return res.status(404).json({ error: 'User not found' });
+        } 
+
+        const lastMessages = await getLastMessageForUser(userData.user_id);
+        res.json(lastMessages);
+        
+    } catch (error) {
+
+    }
+})
 export default router;
