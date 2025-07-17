@@ -121,9 +121,10 @@ router.get('/last/:username', async (req, res) => {
 
         const lastMessages = await getLastMessageForUser(userData.user_id);
         res.json(lastMessages);
-        
-    } catch (error) {
 
+    } catch (error) {
+      console.error('Error fetching last messages', error);
+      res.status(500).json({ error: 'Failed to fetch last messages' });
     }
 })
 export default router;
