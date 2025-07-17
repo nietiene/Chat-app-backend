@@ -110,26 +110,20 @@ router.patch ('/mark-as-unread', async (req, res) => {
     }
 })
 
-router.get('/last/:name', async (req, res) => {
+router.get('/last-by-id/:user_id', async (req, res) => {
 
-    try {
-        const name = decodeURIComponent(req.params.name);
-       
-        const userData = await getUserByName(name);
-       
-        console.log('Searching for user:', name);
+   try {
 
-        if (!userData) {
-            return res.status(404).json({ 
-                error: 'User not found',
-                searchedName: name,
-            });
-        } 
+    const userId = parseInt(req.params.user_id);
 
-        const lastMessages = await getLastMessageForUser(userData.user_id);
-        res.json(lastMessages);
+    if (isNaN(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+    }
 
-    } catch (error) {
+    const lastMessages = await getLastMessageForUser(userId);
+    res.json(lastMessages);
+
+   } catch (error) {
       console.error('Error fetching last messages', error);
       res.status(500).json({ error: 'Failed to fetch last messages' });
     }
