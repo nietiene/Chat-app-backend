@@ -28,7 +28,7 @@ export async function getMessagesBetweenUsers(user1_id, user2_id) {
 export async function markMessagesAsRead(sender_id, receiver_id) {
     await db.query(
         `UPDATE messages SET read = 1 
-         WHERE sender_id = ? AND receiver_id = ? AND read = 0`,
+         WHERE sender_id = ? AND receiver_id = ? AND is_read = 0`,
         [sender_id, receiver_id]
     );
 }
