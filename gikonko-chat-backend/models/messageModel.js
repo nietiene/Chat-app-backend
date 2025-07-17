@@ -32,3 +32,26 @@ export async function markMessagesAsRead(sender_id, receiver_id) {
         [sender_id, receiver_id]
     );
 }
+
+
+export async function getMessageForUser(userId) {
+          const [rows] = await db.query(
+            `SELECT m.*, u.name AS sender_name, u2.name AS receiver_name
+            FROM messages m
+            JOIN user u ON m.sender_id = u.user_id
+            JOIN user u2 ON m.receiver_id = u2.user_id
+            INNER JOIN (
+                 SELECT 
+                   LEAST(sender_id, receiver_id) AS user1,
+                   GREATEST(sender_id, receiver_id) AS user2,
+                   MAX(m_id) AS max_id
+                FROM messages 
+                WHERE sender_id = ? OR receiver_id = ?
+                GROUP BY user1, user2
+                ) latest
+                ON m.m_id = latest.max_id
+                WHERE M.is_deleted = FALSE
+                ORDER BY m.created_at DESC`,
+                [userId, userId]
+          )
+}
