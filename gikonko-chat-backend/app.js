@@ -13,6 +13,7 @@ import messageRoutes from "./routes/messageRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import groupRoutes from "./routes/groupRoute.js"
 import { getUserByName } from "./models/userModel.js";
+import NotificationRoutes from "./routes/notificationRoute.js";
 import { fileURLToPath } from "url";
 import db from "./models/db.js"
 import path from "path";
@@ -60,6 +61,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/notifications', NotificationRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -120,6 +122,8 @@ socket.on('deleteGroupMessage', ({ id }) => {
             console.error('Failed to send group message via socket', err);
         }
     })
+
+    io.to(receiverSocketId)
 
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
