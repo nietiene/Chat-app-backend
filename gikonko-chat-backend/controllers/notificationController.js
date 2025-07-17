@@ -9,7 +9,16 @@ export const createNotification = async (req, res) => {
         const [result] = await db.query(
             'INSERT INTO notfications (receiver_id, sender_id, content, is_read, created_at) VALUES(?, ?, ?, ?, ?)',
             [receiver_id, sender_id, content, is_read, created_at]
-        )
+        );
+
+        const notification = {
+            id: result.insertId,
+            receiver_id,
+            sender_id,
+            content,
+            is_read,
+            created_at
+        }
     }
     
 
