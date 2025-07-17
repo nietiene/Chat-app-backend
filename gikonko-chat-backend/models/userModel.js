@@ -24,7 +24,9 @@ export async function findUserByPhone(phone) {
 export async function getUserByName(name) {
 
     const normalizeName = name.trim().replace(/\s+/g, ' ') // normalize space 
-    const [rows] = await pool.query('SELECT * FROM user WHERE name = ?', [name]);
+    console.log(`Searching for user: "${normalizedName}"`); // Debugging
+    
+    const [rows] = await pool.query('SELECT * FROM user WHERE name = ?', [normalizeName]);
     return rows[0];
 }
 
