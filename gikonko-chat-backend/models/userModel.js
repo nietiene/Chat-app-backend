@@ -21,6 +21,7 @@ export async function findUserByPhone(phone) {
     return rows[0];
 }
 
+// for name only
 export async function getUserByName(name) {
     const [rows] = await pool.query('SELECT * FROM user WHERE name = ?', [name]);
     return rows[0];
