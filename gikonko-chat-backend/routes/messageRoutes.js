@@ -111,6 +111,7 @@ router.delete('/:m_id', async (req, res) => {
 // })
 
 router.get('/last-by-id/:userId', async (req, res) => {
+    console.log(`Received request for userId: ${req.params.userId}`);
    const userId = req.params.userId;
 
    try {
