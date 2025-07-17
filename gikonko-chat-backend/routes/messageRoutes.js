@@ -96,4 +96,16 @@ router.delete('/:m_id', async (req, res) => {
     }
 
 })
+
+router.patch ('/mark-as-unread', async (req, res) => {
+    const { sender_id, receiver_id } = req.body;
+
+    try {
+        await markMessagesAsRead(sender_id, receiver_id);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error marking messages as read', err);
+        res.status(500).json({ message: 'Failed to mark as read' });
+    }
+})
 export default router;
