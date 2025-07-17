@@ -114,7 +114,7 @@ router.get('/last-by-id/:userId', async (req, res) => {
 
    try {
 
-    const userId = parseInt(req.params.user_id);
+    const userId = parseInt(req.params.userId);
 
     if (isNaN(userId)) {
         return res.status(400).json({ error: 'Invalid user ID' });
