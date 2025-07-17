@@ -18,7 +18,14 @@ export const createNotification = async (req, res) => {
             content,
             is_read,
             created_at
-        }
+        };
+
+        io.to(`user_${receiver_id}`).emit('notification', notification);
+
+        res.status(201).json({ success: true, notification });
+    } catch (error) {
+        console.error('Error creating notification:', error);
+        res.status(500).json({ error: 'Failed to create notification' });
     }
     
 
