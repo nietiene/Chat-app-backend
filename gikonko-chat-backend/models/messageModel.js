@@ -24,36 +24,3 @@ export async function getMessagesBetweenUsers(user1_id, user2_id) {
     );
     return rows;
 }
-
-export async function markMessagesAsRead(sender_id, receiver_id) {
-    await db.query(
-        `UPDATE messages SET is_read = 1 
-         WHERE sender_id = ? AND receiver_id = ? AND is_read = 0`,
-        [sender_id, receiver_id]
-    );
-}
-
-
-export async function getLastMessageForUser(userId) {
-          const [rows] = await db.query(
-            `SELECT m.*, u.name AS sender_name, u2.name AS receiver_name
-             FROM messages m
-             JOIN user u ON m.sender_id = u.user_id
-             JOIN user u2 ON m.receiver_id = u2.user_id
-             INNER JOIN (
-                SELECT 
-                   LEAST(sender_id, receiver_id) AS user1,
-                   GREATEST(sender_id, receiver_id) AS user2,
-                   MAX(m_id) AS max_id
-               FROM messages 
-               WHERE sender_id = ? OR receiver_id = ?
-               GROUP BY user1, user2
-            ) latest
-            ON m.m_id = latest.max_id
-            WHERE m.is_deleted = FALSE
-            ORDER BY m.created_at DESC`,
-            [userId, userId]
-          );
-
-          return rows;
-}

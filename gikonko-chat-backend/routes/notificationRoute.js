@@ -21,4 +21,6 @@ router.get('/notification/:user_id', async (req, res) => {
 
 
 // Mark as readed
-router.post('/notification/mark-read/user_id')
+router.post('/notification/mark-read/:user_id', async (req, res) => {
+    const { user_id } = 
+})
