@@ -1,10 +1,9 @@
-import router from '../routes/messageRoutes.js';
 import db from './db.js';
 
 export async function saveMessage(sender_id, receiver_id, content) {
     const [result] = await db.query(
         `INSERT INTO messages (sender_id, receiver_id, content, is_read) 
-         VALUES (?, ?, ?, ?)`,
+         VALUES (?, ?, ?, FALSE)`,
         [sender_id, receiver_id, content]
     );
     return result.insertId;
