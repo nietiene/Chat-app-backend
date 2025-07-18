@@ -42,4 +42,21 @@ router.post('/notification/mark-read', async (req, res) => {
     }
 })
 
+
+// handle notification click (mark as read + redirect)
+router.post('/:id/action', async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+        const notificationId = req.params.id;
+
+        const [notification] = await pool.query(
+            `SELECT * FROM notifications WHERE id = ? AND receiver_id = ?`, 
+            [notificationId, userId]
+        );
+
+        if (!notification.length) {
+            return 
+        }
+    }
+})
 export default router
