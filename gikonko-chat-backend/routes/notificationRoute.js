@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/notification', sendNotification);
 
-router.get('/notification', async (req, res) => {
+router.get('/notifications', async (req, res) => {
 
     try {
 
