@@ -70,6 +70,7 @@ app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group')))
 app.set('io', io);
 
 const users = {};
+
 setupNotificationService(io, users);
 
 io.on('connection', async (socket) => {

@@ -9,12 +9,11 @@ export function setupNotificationService (socketIO, users) {
     onlineUsers = users;
 }
 export const sendNotification = async ({ receiver_id, sender_id, type, content }) => {
-
     try {
 
         const created_at = new Date();
         const [result] = await db.query(
-            'INSERT INTO notfications (receiver_id, sender_id, type, content, ) VALUES(?, ?, ?, ?)',
+            'INSERT INTO notifications (receiver_id, sender_id, type, content) VALUES(?, ?, ?, ?)',
             [receiver_id, sender_id, type, content,]
         );
 
@@ -32,7 +31,6 @@ export const sendNotification = async ({ receiver_id, sender_id, type, content }
             })
         }
 
-        res.status(201).json({ success: true, id: result.insertId });
     } catch (error) {
         console.error('Error creating notification:', error);
         res.status(500).json({ error: 'Failed to create notification' });
