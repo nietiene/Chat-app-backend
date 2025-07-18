@@ -76,6 +76,9 @@ router.post('/:id/action', async (req, res) => {
 
         res.json({ redirectTo: redirectPath });
 
+    } catch (error) {
+        console.error(error);
+        res.status(500).json('Error processing notification');
     }
 })
 export default router
