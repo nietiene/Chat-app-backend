@@ -39,7 +39,7 @@ router.post("/", uploads.single("image"), async (req, res) => {
                 receiver_id: parent.user_id,
                 sender_id,
                 type: 'New post',
-                content: 'A new post has been shared'
+                content: postId.toString()
             })
            }
 
