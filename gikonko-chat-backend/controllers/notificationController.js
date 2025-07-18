@@ -14,7 +14,7 @@ export const sendNotification = async ({ receiver_id, sender_id, type, content }
         const created_at = new Date();
         const [result] = await db.query(
             'INSERT INTO notifications (receiver_id, sender_id, type, content) VALUES(?, ?, ?, ?)',
-            [receiver_id, sender_id, type, content,]
+            [receiver_id, sender_id, type, content]
         );
 
 
