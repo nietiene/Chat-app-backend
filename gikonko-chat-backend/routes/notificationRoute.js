@@ -13,7 +13,11 @@ router.get('/', async (req, res) => {
         const userId = req.session.user.id;
 
         const [rows] = await pool.query(
-            'SELECT * FROM notifications WHERE receiver_id = ? ORDER BY created_at DESC',
+            `SELECT n.*, u.name, as sender_name, u.profile_image as sender_profile_image
+            FROM notifications n
+            LEFT JOIN user u ON n.sender_id = u.user_id
+            WHERE n.receiver_id = ?
+            ORDER BY n.created_at DESC`,
             [userId]
         );
 
