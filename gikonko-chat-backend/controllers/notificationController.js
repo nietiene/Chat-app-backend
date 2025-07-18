@@ -22,7 +22,7 @@ export const sendNotification = async ({ receiver_id, sender_id, type, content }
         const socketId = onlineUsers[receiver_id];
 
         if (socketId && io) {
-            io.to(receiverSocketId).emit('notification', {
+            io.to(socketId).emit('notification', {
                id: result.insertId,
                receiver_id,
                sender_id,
