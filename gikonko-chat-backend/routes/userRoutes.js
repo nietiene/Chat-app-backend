@@ -31,14 +31,16 @@ try {
     const [users] = await db.query('SELECT * FROM user WHERE user_id != ?', [req.session.user.id]);
 
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
+
     db.query(sql, [req.file.filename, req.session.user.id]);
       
     req.session.user.profile_image = req.file.filename;
 
     const notificationSql = `
-       INSERT INTO notifications (receiver_id, sender_id, content, is_read, created_at)
-       VALUES(?, ?, ?, ?, NOW())`;
+       INSERT INTO notifications (receiver_id, sender_id, type, content, is_read, created_at)
+       VALUES(?, ?, ?, ?, ?, NOW())`;
     
     const notificationPromise = users.map(user => {
         const notificationContent = `${req.session.user.name} Updated their profile picture`;
