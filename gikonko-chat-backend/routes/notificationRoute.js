@@ -38,3 +38,5 @@ router.post('/notification/mark-read/:user_id', async (req, res) => {
        res.status(500).json('Error marking notification as read')
     }
 })
+
+export default router
