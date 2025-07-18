@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import db from "../models/db.js";
-import { createNotification } from "../controllers/notificationController.js";
+import { sendNotification } from "../controllers/notificationController.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -34,7 +34,7 @@ router.post("/", uploads.single("image"), async (req, res) => {
            const [parents] = await db.query("SELECT user_id FROM user WHERE role = 'parent'");
 
            for (let parent of parents) {
-            await createNotification({
+            await sendNotification({
                 receiver_id: parent.user_id,
                 sender_id,
                 type: 'New post',
