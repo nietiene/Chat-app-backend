@@ -20,11 +20,11 @@ export const createNotification = async (req, res) => {
                sender_id,
                content,
                is_read: 0,
-               created_at: new Date()
+               created_at
             })
         }
 
-        res.status(201).json({ success: true, notification });
+        res.status(201).json({ success: true, id: result.insertId });
     } catch (error) {
         console.error('Error creating notification:', error);
         res.status(500).json({ error: 'Failed to create notification' });
