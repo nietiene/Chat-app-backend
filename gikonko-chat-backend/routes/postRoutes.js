@@ -27,10 +27,10 @@ router.post("/", uploads.single("image"), async (req, res) => {
         }
 
         try {
-           const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)";
-           await db.query(query, [sender_id, content, image, visible_to]);
+           const [result] = await db.query( "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)", [sender_id, content, image, visible_to]);
            res.json({ success: true, message: "Post created successfully" });
 
+           const postId = result.insertId;
            // fetch all parents to notify them
            const [parents] = await db.query("SELECT user_id FROM user WHERE role = 'parent'");
 
@@ -43,7 +43,7 @@ router.post("/", uploads.single("image"), async (req, res) => {
             })
            }
 
-           res.json({ success: true, message: 'Post created and notification sent' });
+           res.json({ success: true, message: 'Post created and notification sent', postId });
         } catch (error) {
                console.error(error);
                res.status(500).json({ error: "Database error" }); 
