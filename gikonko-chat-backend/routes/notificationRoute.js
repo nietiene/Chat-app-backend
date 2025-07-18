@@ -55,8 +55,27 @@ router.post('/:id/action', async (req, res) => {
         );
 
         if (!notification.length) {
-            return 
+            return res.status(404).json({ error: 'Notification not found' });
         }
+
+        await pool.query(
+            `UPDATE notifications SET is_read = 1 WHERE id = ?`,
+            [notificationId]
+        );
+
+        // determine the redirect path based on type of notification
+        let redirectPath = '/';
+        const notif = notification[0];
+
+        if (notif.type === 'message') {
+            redirectPath = `/chat/${notif.sender_id}`;
+
+        } else if (notif.type === 'group') {
+              redirectPath= `/chat/${notif.sender_id}`
+        }
+
+        res.json({ redirectTo: redirectPath });
+
     }
 })
 export default router
