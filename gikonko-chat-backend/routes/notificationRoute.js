@@ -1,10 +1,10 @@
 import express from "express";
 import pool from "../models/db.js";
-import { createNotification } from "../controllers/notificationController.js";
+import { sendNotification } from "../controllers/notificationController.js";
 
 const router = express.Router();
 
-router.get('/notification', createNotification);
+router.get('/notification', sendNotification);
 
 router.get('/notification/:user_id', async (req, res) => {
     const { user_id } = req.params;
