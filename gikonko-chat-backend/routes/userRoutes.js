@@ -33,6 +33,9 @@ try {
     db.query(sql, [req.file.filename, req.session.user.id]);
       
     req.session.user.profile_image = req.file.filename;
+
+    const notificationSql = `
+       INSERT INTO notifications ()`
     res.json({
         success: true,
         filename: req.file.filename,
