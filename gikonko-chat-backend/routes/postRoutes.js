@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import db from "../models/db.js";
 import { sendNotification } from "../controllers/notificationController.js";
+import pool from "../models/db.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -73,5 +74,26 @@ router.get("/", async (req, res) => {
            
 })
 
+router.get('/:id', async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const [rows] = await pool.query(
+            `SELECT p.*, u.name AS author_name FROM posts p
+            LEFT JOIN user u ON p.user_id = u.user_id
+            WHERE p.post_id = ?`,
+            [postId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Post not found' });
+
+        }
+
+        return res.json(rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching post' });
+    }
+})
 
 export default router;
