@@ -30,7 +30,13 @@ router.post("/", uploads.single("image"), async (req, res) => {
            await db.query(query, [sender_id, content, image, visible_to]);
            res.json({ success: true, message: "Post created successfully" });
 
-           
+           // fetch all parents to notify them
+           const [parents] = await db.query("SELECT user_id FROM user WHERE role = 'parent'");
+
+           for (let parent of parents) {
+            await createNotification
+           }
+
              
         } catch (error) {
                console.error(error);
