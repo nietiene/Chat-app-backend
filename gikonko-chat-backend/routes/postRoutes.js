@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import db from "../models/db.js";
+import { createNotification } from "../controllers/notificationController.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -15,8 +16,6 @@ const uploads = multer({ storage });
 
 router.post("/", uploads.single("image"), async (req, res) => {
 
-    console.log("uploaded", req.file);
-    
         const { content } = req.body;
         const sender_id = req.session.user?.id;
         const visible_to = "parent";
@@ -30,6 +29,8 @@ router.post("/", uploads.single("image"), async (req, res) => {
            const query = "INSERT INTO posts (sender_id, content, image, created_at, visible_to) VALUES(?, ?, ?, NOW(), ?)";
            await db.query(query, [sender_id, content, image, visible_to]);
            res.json({ success: true, message: "Post created successfully" });
+
+           
              
         } catch (error) {
                console.error(error);
