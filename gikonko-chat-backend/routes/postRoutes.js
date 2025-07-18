@@ -42,7 +42,7 @@ router.post("/", uploads.single("image"), async (req, res) => {
             })
            }
 
-             
+           res.json({ success: true, message: 'Post created and notification sent' });
         } catch (error) {
                console.error(error);
                res.status(500).json({ error: "Database error" }); 
