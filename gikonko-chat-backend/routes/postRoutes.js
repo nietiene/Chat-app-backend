@@ -75,8 +75,9 @@ router.get("/", async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
+     const postId = req.params.id;
     try {
-        const postId = req.params.id;
+        
         const [rows] = await pool.query(
             `SELECT p.*, u.name AS author_name FROM posts p
             LEFT JOIN user u ON p.sender_id = u.user_id
