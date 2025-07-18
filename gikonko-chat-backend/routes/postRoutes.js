@@ -34,7 +34,12 @@ router.post("/", uploads.single("image"), async (req, res) => {
            const [parents] = await db.query("SELECT user_id FROM user WHERE role = 'parent'");
 
            for (let parent of parents) {
-            await createNotification
+            await createNotification({
+                receiver_id: parent.user_id,
+                sender_id,
+                type: 'New post',
+                content: 'A new post has been shared'
+            })
            }
 
              
