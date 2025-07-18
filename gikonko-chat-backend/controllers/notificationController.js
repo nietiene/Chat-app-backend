@@ -1,19 +1,27 @@
 import db from "../models/db.js";
 
-export const createNotification = async (req, res) => {
-    const {	receiver_id, sender_id,	type, content } = req.body;
-    const io = req.app.get('io');
+
+let io = null;
+let onlineUsers = {};
+
+export function setupNotificationService (socketIO, users) {
+    io = socketIO,
+    onlineUsers = users;
+}
+export const sendNotification = async ({ receiver_id, sender_id, type, content }) => {
 
     try {
+
         const created_at = new Date();
         const [result] = await db.query(
             'INSERT INTO notfications (receiver_id, sender_id, type, content, ) VALUES(?, ?, ?, ?)',
             [receiver_id, sender_id, type, content,]
         );
 
-        const receiverSocketId = req.app.get('onlineUsers')?.[receiver_id];
 
-        if (receiverSocketId) {
+        const socketId = onlineUsers[receiver_id];
+
+        if (socketId && io) {
             io.to(receiverSocketId).emit('notification', {
                id: result.insertId,
                receiver_id,
