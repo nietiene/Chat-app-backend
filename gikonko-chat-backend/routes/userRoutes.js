@@ -25,9 +25,11 @@ const upload = multer({ storage });
     next();
  }
 
- router.post("/change-profile-photo", isLoggedIn, upload.single("profile_image"), (req, res) => {
+ router.post("/change-profile-photo", isLoggedIn, upload.single("profile_image"), async (req, res) => {
 try {
   
+    const [users] = await db.query('SELECT * FROM user WHERE user_id != ?', [req.session.user.id]);
+    
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
     db.query(sql, [req.file.filename, req.session.user.id]);
@@ -35,7 +37,10 @@ try {
     req.session.user.profile_image = req.file.filename;
 
     const notificationSql = `
-       INSERT INTO notifications ()`
+       INSERT INTO notifications (receiver_id, sender_id, content, is_read, created_at)
+       VALUES(?, ?, ?, ?, NOW())`;
+    
+    const notificationPromise = user   
     res.json({
         success: true,
         filename: req.file.filename,
