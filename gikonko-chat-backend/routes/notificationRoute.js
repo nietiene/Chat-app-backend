@@ -65,6 +65,7 @@ router.post('/:id/action', async (req, res) => {
 
         // determine the redirect path based on type of notification
         let redirectPath = '/';
+        let state = {};
         const notif = notification[0];
 
         if (notif.type === 'message') {
