@@ -123,8 +123,6 @@ socket.on('deleteGroupMessage', ({ id }) => {
         }
     })
 
-    io.to(receiverSocketId)
-
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
             const sender = await getUserByName(from);

@@ -96,3 +96,5 @@ router.delete('/:m_id', async (req, res) => {
     }
 
 })
+
+export default router
