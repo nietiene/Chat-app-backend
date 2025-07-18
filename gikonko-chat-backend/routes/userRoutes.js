@@ -29,7 +29,7 @@ const upload = multer({ storage });
 try {
   
     const [users] = await db.query('SELECT * FROM user WHERE user_id != ?', [req.session.user.id]);
-    
+
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const sql = "UPDATE user SET profile_image = ? WHERE user_id = ?";
     db.query(sql, [req.file.filename, req.session.user.id]);
@@ -40,7 +40,19 @@ try {
        INSERT INTO notifications (receiver_id, sender_id, content, is_read, created_at)
        VALUES(?, ?, ?, ?, NOW())`;
     
-    const notificationPromise = user   
+    const notificationPromise = users.map(user => {
+        const notificationContent = `${req.session.user.name} Updated their profile picture`;
+        return db.query(notificationSql, [
+            user.user_id, // reciever_id (each user)
+            req.session.user.id, // sender_id
+            'profile_update', // type
+            notificationContent, // content
+            0
+        ]);
+    })
+
+    await Promise.all(notificationPromise); // insert all notification ad once
+    req.session.user.profile_image = req.file.filename;
     res.json({
         success: true,
         filename: req.file.filename,
