@@ -72,6 +72,8 @@ router.post('/:id/action', async (req, res) => {
 
         } else if (notif.type === 'group') {
               redirectPath= `/chat/${notif.sender_id}`
+        } else if (notif.type === 'New post') {
+            redirectPath = `/dashboard/${notif.sender_id}`
         }
 
         res.json({ redirectTo: redirectPath });
