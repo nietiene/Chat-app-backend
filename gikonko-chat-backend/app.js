@@ -69,28 +69,6 @@ app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group')))
 app.set('io', io);
 
 const users = {};
-const sendNotification = async ({ receiver_id, sender_id, type, content }) => {
-    try {
-        await db.query(
-            'INSERT INTO notifications (receiver_id, sender_id, type, content) VALUES (?, ?, ?, ?)',
-            [receiver_id, sender_id, type, content]
-        );
-
-        const socketId = users[receiver_id];
-        if (socketId) {
-            io.to(socketId).emit('notification', {
-                receiver_id,
-                sender_id,
-                type,
-                content,
-                is_read: 0,
-                created_at: new Date().toISOString()
-            });
-        }
-    } catch (error) {
-        console.error('Notification error:', error);
-    }
-};
 
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
