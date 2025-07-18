@@ -69,6 +69,29 @@ app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group')))
 app.set('io', io);
 
 const users = {};
+const sendNotification = async ({ receiver_id, sender_id, type, content }) => {
+    try {
+        await db.query(
+            'INSERT INTO notifications (receiver_id, sender_id, type, content) VALUES (?, ?, ?, ?)',
+            [receiver_id, sender_id, type, content]
+        );
+
+        const socketId = users[receiver_id];
+        if (socketId) {
+            io.to(socketId).emit('notification', {
+                receiver_id,
+                sender_id,
+                type,
+                content,
+                is_read: 0,
+                created_at: new Date().toISOString()
+            });
+        }
+    } catch (error) {
+        console.error('Notification error:', error);
+    }
+};
+
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
 
@@ -79,18 +102,19 @@ io.on('connection', async (socket) => {
 socket.on('deleteGroupMessage', ({ id }) => {
     io.emit('groupMessageDeleted', { id });
 });
-    socket.on('login', async (username) => {
-        try {
-            const user = await getUserByName(username);
-            if (user) {
-                users[username] = socket.id;
-                console.log(`${username} connected with socket ID: ${socket.id}`);
-                io.emit('userList', Object.keys(users));
-            }
-        } catch (error) {
-            console.error('Login error:', error);
+socket.on('login', async (username) => {
+    try {
+        const user = await getUserByName(username);
+        if (user) {
+            users[user.user_id] = socket.id;
+            console.log(`${username} connected with socket ID: ${socket.id}`);
+            io.emit('userList', Object.keys(users));
         }
-    });
+    } catch (error) {
+        console.error('Login error:', error);
+    }
+});
+
     
     const userInGroup = socket.request.session.user;
     if (!userInGroup) return;
