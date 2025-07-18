@@ -6,13 +6,15 @@ const router = express.Router();
 
 router.get('/notification', sendNotification);
 
-router.get('/notification/:user_id', async (req, res) => {
-    const { user_id } = req.params;
+router.get('/notification', async (req, res) => {
 
     try {
+
+        const userId = req.session.user.id;
+
         const [rows] = await pool.query(
             'SELECT * FROM notifications WHERE receiver_id = ? AND is_read = 0 ORDER BY created_at DESC',
-            [user_id]
+            [userId]
         );
 
         res.json(rows);
@@ -24,13 +26,14 @@ router.get('/notification/:user_id', async (req, res) => {
 
 
 // Mark as readed
-router.post('/notification/mark-read/:user_id', async (req, res) => {
-    const { user_id } = req.params;
+router.post('/notification/mark-read/', async (req, res) => {
 
     try {
+        const userId = req.session.user.id;
+
         await pool.query (
             'UPDATE notifications SET is_read = 1 WHERE receiver_id = ?',
-            [user_id]
+            [userId]
         );
         res.sendStatus(200);
 
