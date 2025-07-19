@@ -54,7 +54,13 @@ router.post('/update', async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             query += 'password = ?,';
+            values.push(hashedPassword);
+        }
 
+        // remove trailing comma
+
+        if (values.length === 0) {
+            return res.status(400).json({ message: 'Nothing to update' });
         }
     }
 })
