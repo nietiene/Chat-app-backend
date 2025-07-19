@@ -10,7 +10,7 @@ router.get('/me', async (req, res) => {
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
     try {
-        const [rows] = await pool.query('SELECT name, phone, FROM user WHERE user_id = ?', [userId]);
+        const [rows] = await pool.query('SELECT name, phone FROM user WHERE user_id = ?', [userId]);
         if (rows.length === 0) return res.status(404).json({ message: 'User not found' });
 
         res.json(rows[0]);
