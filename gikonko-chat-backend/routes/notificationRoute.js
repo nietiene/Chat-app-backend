@@ -34,12 +34,13 @@ router.post('/mark-read', async (req, res) => {
 
     try {
         const userId = req.session.user.id;
-
+        if (!userId) return res.status(401).json({ error: 'Unauthorized' });
         await pool.query (
             'UPDATE notifications SET is_read = 1 WHERE receiver_id = ?',
             [userId]
         );
-        res.sendStatus(200);
+
+        return res.status(200).json({ message: 'Marked as read' });
 
     } catch (error) {
        res.status(500).json('Error marking notification as read')
@@ -51,21 +52,29 @@ router.post('/mark-read', async (req, res) => {
 router.post('/:id/action', async (req, res) => {
     try {
         const userId = req.session.user.id;
-        const notificationId = req.params.id;
+        const notificationId = parseInt(req.params.id);
 
-        const [notification] = await pool.query(
+        if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+        if (isNaN(notificationId)) return res.status(400).json({ error: 'Invalid notification ID' });
+
+        const [notificationRows] = await pool.query(
             `SELECT * FROM notifications WHERE id = ? AND receiver_id = ?`, 
             [notificationId, userId]
         );
 
-        if (!notification.length) {
+        const notification = notificationRows[0];
+
+        if (!notificationRows.length) {
             return res.status(404).json({ error: 'Notification not found' });
         }
 
-        await pool.query(
-            `UPDATE notifications SET is_read = 1 WHERE id = ?`,
-            [notificationId]
-        );
+        if (!notification.is_read) {
+           await pool.query(
+              `UPDATE notifications SET is_read = 1 WHERE id = ?`,
+              [notificationId]
+           );
+        }
+
 
         // determine the redirect path based on type of notification
         let redirectPath = '/';
