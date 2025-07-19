@@ -83,6 +83,10 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     const userId = req.params.user_id;
-    
+
+    try {
+        const [rows] = await db.query('SELECT user_id, name, profile_photo, joined_at WHERE user_id = ?', [userId]);
+        
+    }
 })
 export default router;
