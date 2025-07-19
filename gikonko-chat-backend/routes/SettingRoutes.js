@@ -62,5 +62,11 @@ router.post('/update', async (req, res) => {
         if (values.length === 0) {
             return res.status(400).json({ message: 'Nothing to update' });
         }
+
+        query = query.slice(0, -1); // remove last comma 
+        query += 'WHERE user_id = ?';
+        values.push(userId);
+        
+        await pool.query(query, values);
     }
 })
