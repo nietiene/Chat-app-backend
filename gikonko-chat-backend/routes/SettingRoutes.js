@@ -50,7 +50,8 @@ router.post('/update', async (req, res) => {
 
         if (oldPassword && newPassword) {
             const isMatch = await bcrypt.compare(oldPassword, userRows[0].password);
-            res.status(400).json({ message: 'Old password is incorrect' });
+            if (!ma) return res.status(400).json({ message: 'Old password is incorrect' });
+
         }
     }
 })
