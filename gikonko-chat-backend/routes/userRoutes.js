@@ -85,14 +85,14 @@ router.get('/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
     try {
-        const [rows] = await db.query('SELECT user_id, name, profile_photo, joined_at, role WHERE user_id = ?', [userId]);
+        const [rows] = await db.query('SELECT user_id, name, profile_photo, joined_at, role FROM user WHERE user_id = ?', [userId]);
 
         if (rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
         res.json(rows[0]);
     } catch (error) {
-        console.error('User fetch error:', err);
+        console.error('User fetch error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 })
