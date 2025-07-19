@@ -35,16 +35,16 @@ router.post('/update', async (req, res) => {
         if (userRows.length === 0) return res.send(404).json({ message: 'User not found' });
 
 
-        let query = 'UPDATE user SET';
+        let query = 'UPDATE user SET ';
         const values = [];
 
         if (name) {
-            query += 'name = ?,';
+            query += ' name = ?,';
             values.push(name);
         }
 
         if (phone) {
-            query += 'phone = ?,';
+            query += ' phone = ?,';
             values.push(phone);
         }
 
@@ -53,7 +53,7 @@ router.post('/update', async (req, res) => {
             if (!isMatch) return res.status(400).json({ message: 'Old password is incorrect' });
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
-            query += 'password = ?,';
+            query += ' password = ?,';
             values.push(hashedPassword);
         }
 
@@ -64,7 +64,7 @@ router.post('/update', async (req, res) => {
         }
 
         query = query.slice(0, -1); // remove last comma 
-        query += 'WHERE user_id = ?';
+        query += ' WHERE user_id = ?';
         values.push(userId);
         
         await pool.query(query, values);
