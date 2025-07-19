@@ -51,12 +51,12 @@ router.post('/mark-read', async (req, res) => {
 // handle notification click (mark as read + redirect)
 router.post('/:id/action', async (req, res) => {
     try {
-        
+
         const userId = req.session.user.id;
-        const notificationId = parseInt(req.params.id);
+        const notificationId = req.params.id;
 
         if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-        if (isNaN(notificationId)) return res.status(400).json({ error: 'Invalid notification ID' });
+        if (notificationId) return res.status(400).json({ error: 'Invalid notification ID' });
 
         const [notificationRows] = await pool.query(
             `SELECT * FROM notifications WHERE id = ? AND receiver_id = ?`, 
