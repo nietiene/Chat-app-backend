@@ -51,6 +51,7 @@ router.post('/mark-read', async (req, res) => {
 // handle notification click (mark as read + redirect)
 router.post('/:id/action', async (req, res) => {
     try {
+        
         const userId = req.session.user.id;
         const notificationId = parseInt(req.params.id);
 
