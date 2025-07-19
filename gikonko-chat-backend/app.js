@@ -15,6 +15,7 @@ import groupRoutes from "./routes/groupRoute.js"
 import { getUserByName } from "./models/userModel.js";
 import { setupNotificationService } from "./controllers/notificationController.js";
 import NotificationRoutes from "./routes/notificationRoute.js";
+import SettingRoute from "./routes/SettingRoutes.js";
 import { fileURLToPath } from "url";
 import db from "./models/db.js"
 import path from "path";
@@ -63,6 +64,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/notifications', NotificationRoutes);
+app.use('/api/settings', SettingRoute);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
