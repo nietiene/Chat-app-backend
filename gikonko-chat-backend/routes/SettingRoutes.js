@@ -28,5 +28,29 @@ router.post('/update', async (req, res) => {
     const userId = req.session.user.id;
     const { name, phone, oldPassword, newPassword}  = req.body;
 
-    if (!userId) return res.status()
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    try {
+        const [userRows] = await pool.query('SELECT password FROM user WHERE user_id = ?', [userId]);
+        if (userRows.length === 0) return res.send(404).json({ message: 'User not found' });
+
+
+        let query = 'UPDATE user SET';
+        const values = [];
+
+        if (name) {
+            query += 'name = ?';
+            values.push(name);
+        }
+
+        if (phone) {
+            query += 'phone = ?';
+            values.push(phone);
+        }
+
+        if (oldPassword && newPassword) {
+            const isMatch = await bcrypt.compare(oldPassword, userRows[0].password);
+            res.status(400).json({ message: 'Old password is incorrect' });
+        }
+    }
 })
