@@ -41,18 +41,7 @@ try {
     const notificationSql = `
        INSERT INTO notifications (receiver_id, sender_id, type, content, is_read, created_at)
        VALUES(?, ?, ?, ?, ?, NOW())`;
-    
-    const notificationPromise = users.map(user => {
-        return db.query(notificationSql, [
-            user.user_id, // reciever_id (each user)
-            req.session.user.id, // sender_id
-            'profile_update', // type
-            req.session.user.id, // content
-            0
-        ]);
-    })
 
-    await Promise.all(notificationPromise); // insert all notification ad once
     req.session.user.profile_image = req.file.filename;
     res.json({
         success: true,
