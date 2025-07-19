@@ -80,4 +80,9 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch users' });
     }
 });
+
+router.get('/:id', async (req, res) => {
+    const userId = req.params.user_id;
+    
+})
 export default router;
