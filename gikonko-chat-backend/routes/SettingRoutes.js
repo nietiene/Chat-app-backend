@@ -68,5 +68,10 @@ router.post('/update', async (req, res) => {
         values.push(userId);
         
         await pool.query(query, values);
+
+        res.json({ message: 'Settings updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Update failed' });
     }
 })
