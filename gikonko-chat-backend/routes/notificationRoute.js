@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 
 
 // Mark as readed
-router.post('/notification/mark-read', async (req, res) => {
+router.post('/mark-read', async (req, res) => {
 
     try {
         const userId = req.session.user.id;
