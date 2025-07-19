@@ -75,3 +75,6 @@ router.post('/update', async (req, res) => {
         res.status(500).json({ message: 'Update failed' });
     }
 })
+
+
+export default router;
