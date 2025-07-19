@@ -93,7 +93,7 @@ router.get('/:id', async (req, res) => {
         res.json(rows[0]);
     } catch (error) {
         console.error('User fetch error:', err);
-        res.status()
+        res.status(500).json({ message: 'Server error' });
     }
 })
 export default router;
