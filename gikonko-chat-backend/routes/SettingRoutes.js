@@ -39,18 +39,21 @@ router.post('/update', async (req, res) => {
         const values = [];
 
         if (name) {
-            query += 'name = ?';
+            query += 'name = ?,';
             values.push(name);
         }
 
         if (phone) {
-            query += 'phone = ?';
+            query += 'phone = ?,';
             values.push(phone);
         }
 
         if (oldPassword && newPassword) {
             const isMatch = await bcrypt.compare(oldPassword, userRows[0].password);
-            if (!ma) return res.status(400).json({ message: 'Old password is incorrect' });
+            if (!isMatch) return res.status(400).json({ message: 'Old password is incorrect' });
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            query += 'password = ?,';
 
         }
     }
