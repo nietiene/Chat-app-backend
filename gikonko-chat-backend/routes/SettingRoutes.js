@@ -19,4 +19,14 @@ router.get('/me', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
+});
+
+
+//update setting 
+
+router.post('/update', async (req, res) => {
+    const userId = req.session.user.id;
+    const { name, phone, oldPassword, newPassword}  = req.body;
+
+    if (!userId) return res.status()
 })
