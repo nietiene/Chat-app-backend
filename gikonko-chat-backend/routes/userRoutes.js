@@ -86,7 +86,14 @@ router.get('/:id', async (req, res) => {
 
     try {
         const [rows] = await db.query('SELECT user_id, name, profile_photo, joined_at WHERE user_id = ?', [userId]);
-        
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('User fetch error:', err);
+        res.status()
     }
 })
 export default router;
