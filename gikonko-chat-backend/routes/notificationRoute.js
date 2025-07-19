@@ -55,9 +55,6 @@ router.post('/:id/action', async (req, res) => {
         const userId = req.session.user.id;
         const notificationId = req.params.id;
 
-        if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-        if (notificationId) return res.status(400).json({ error: 'Invalid notification ID' });
-
         const [notificationRows] = await pool.query(
             `SELECT * FROM notifications WHERE id = ? AND receiver_id = ?`, 
             [notificationId, userId]
@@ -68,13 +65,6 @@ router.post('/:id/action', async (req, res) => {
 
         if (!notificationRows.length) {
             return res.status(404).json({ error: 'Notification not found' });
-        }
-
-        if (!notification.is_read) {
-           await pool.query(
-              `UPDATE notifications SET is_read = 1 WHERE id = ?`,
-              [notificationId]
-           );
         }
 
 
@@ -103,6 +93,19 @@ router.post('/:id/action', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json('Error processing notification');
+    }
+});
+
+router.put('/:id/read', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await pool.query("UPDATE notifications SET is_read = 1 WHERE id = ?", [id]);
+        res.sendStatus(200);
+
+    } catch (err) {
+      console.error('Failed to maekr as read', err);
+      res.status(500).send('Server error');
     }
 })
 export default router
