@@ -43,6 +43,16 @@ try {
        VALUES(?, ?, ?, ?, ?, NOW())`;
 
     req.session.user.profile_image = req.file.filename;
+
+    // use simple for loop
+    for (const user of users) {
+        await db.query(notificationSql, [
+            user.user_id, // receiver_id
+            req.session.user.id, // sender_id
+            'profile_update', //type
+            req.session.user.id // content = sender's id
+        ])
+    }
     res.json({
         success: true,
         filename: req.file.filename,
