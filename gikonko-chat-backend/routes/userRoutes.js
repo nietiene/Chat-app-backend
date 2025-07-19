@@ -85,7 +85,7 @@ router.get('/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
     try {
-        const [rows] = await db.query('SELECT user_id, name, profile_image, joined_at, role FROM user WHERE user_id = ?', [userId]);
+        const [rows] = await db.query('SELECT user_id, name, profile_image, created_at, role FROM user WHERE user_id = ?', [userId]);
 
         if (rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
