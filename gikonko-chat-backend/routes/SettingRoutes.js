@@ -48,10 +48,14 @@ router.post('/update', async (req, res) => {
             values.push(phone);
         }
 
-        if (oldPassword && newPassword) {
-            const isMatch = await bcrypt.compare(oldPassword, userRows[0].password);
-            if (!isMatch) return res.status(400).json({ message: 'Old password is incorrect' });
+        if (!oldPassword) {
+            return res.status(400).json({ message: 'Old password is required to update settings' });
+        }
+           
+        const isMatch = await bcrypt.compare(oldPassword, userRows[0].password);
+        if (!isMatch) return res.status(400).json({ message: 'Old password is incorrect' });
 
+        if (newPassword) {
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             query += ' password = ?,';
             values.push(hashedPassword);
