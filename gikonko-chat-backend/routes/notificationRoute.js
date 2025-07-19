@@ -63,6 +63,7 @@ router.post('/:id/action', async (req, res) => {
         );
 
         const notification = notificationRows[0];
+        console.log('Fetched notification:', notification);
 
         if (!notificationRows.length) {
             return res.status(404).json({ error: 'Notification not found' });
