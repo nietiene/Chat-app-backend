@@ -50,7 +50,8 @@ try {
             user.user_id, // receiver_id
             req.session.user.id, // sender_id
             'profile_update', //type
-            req.session.user.id // content = sender's id
+            req.session.user.id, // content = sender's id
+            0
         ])
     }
     res.json({
