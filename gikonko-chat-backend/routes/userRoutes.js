@@ -43,12 +43,11 @@ try {
        VALUES(?, ?, ?, ?, ?, NOW())`;
     
     const notificationPromise = users.map(user => {
-        const notificationContent = `${req.session.user.name} Updated their profile picture`;
         return db.query(notificationSql, [
             user.user_id, // reciever_id (each user)
             req.session.user.id, // sender_id
             'profile_update', // type
-            notificationContent, // content
+            req.session.user.id, // content
             0
         ]);
     })
