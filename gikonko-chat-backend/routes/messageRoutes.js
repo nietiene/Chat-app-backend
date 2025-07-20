@@ -7,6 +7,7 @@ import {
 import { getUserByName } from '../models/userModel.js';
 import pool from '../models/db.js';
 import { error } from 'console';
+import { json } from 'stream/consumers';
 
 const router = express.Router();
 
@@ -98,6 +99,13 @@ router.delete('/:m_id', async (req, res) => {
 
 })
 
+
+// fetch current user
+router.get('/me', (req, res) => {
+    if (!req.session.user) return res.status(401),json({ message: 'Not loggedin' })
+
+        res.json(req.session.user);
+})
 
 // handle unread backend count
 
