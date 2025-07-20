@@ -100,26 +100,20 @@ router.delete('/:m_id', async (req, res) => {
 
 // handle unread backend count
 
-router.get('/unread/:receiver', async (req, res) => {
+router.get('/unread/:receiver_id', async (req, res) => {
     try {
-        const { receiver } = req.params;
-        console.log("Received receiver:", receiver); // ✅ Add this
-
-
-        const receiverData = await getUserByName(receiver);
-        if (!receiverData) {
-            return res.status(404).json({ error: 'Receiver not found' });
-        }
+        const { receiver_id } = req.params;
 
         const [rows] = await pool.query(
             `SELECT sender_id, COUNT(*) AS unread_count
             FROM messages
             WHERE receiver_id = ? AND is_read = FALSE and is_deleted = FALSE
             GROUP BY sender_id`,
-            [receiverData.user_id]
+            [receiver_id]
         )
 
         res.json(rows);
+        
     } catch (error) {
         console.error('Error fetching unread message', error);
         res.status(500).json({ error: 'Failed to fetch unread messages' });
