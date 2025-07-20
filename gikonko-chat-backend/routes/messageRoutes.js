@@ -100,21 +100,15 @@ router.delete('/:m_id', async (req, res) => {
 })
 
 
-// fetch current user
-router.get('/me', (req, res) => {
-    if (!req.session.user) return res.status(401),json({ message: 'Not loggedin' })
-
-        res.json(req.session.user);
-})
-
 // handle unread backend count
 
 router.get('/unread/:receiver_id', async (req, res) => {
     try {
-        const { receiver_id } = req.params;
+        const { receiver_id } = req.session.user.id;
 
         // validate if user(receiver) exists
         const [user] = await pool.query('SELECT user_id FROM user WHERE user_id = ?', [receiver_id]);
+
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         const [rows] = await pool.query(
