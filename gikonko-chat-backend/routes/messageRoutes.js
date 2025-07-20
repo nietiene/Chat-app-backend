@@ -112,7 +112,7 @@ router.get('/unread/:receiver_id', async (req, res) => {
         const [rows] = await pool.query(
             `SELECT sender_id, COUNT(*) AS unread_count
             FROM messages
-            WHERE receiver_id = ? AND is_read = FALSE and is_deleted = FALSE
+            WHERE receiver_id = ? AND is_read = FALSE AND is_deleted = FALSE
             GROUP BY sender_id`,
             [receiver_id]
         )
