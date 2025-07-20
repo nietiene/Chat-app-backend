@@ -103,6 +103,8 @@ router.delete('/:m_id', async (req, res) => {
 router.get('/unread/:receiver', async (req, res) => {
     try {
         const { receiver } = req.params;
+        console.log("Received receiver:", receiver); // ✅ Add this
+
 
         const receiverData = await getUserByName(receiver);
         if (!receiverData) {
