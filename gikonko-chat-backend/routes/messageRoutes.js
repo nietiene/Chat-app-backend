@@ -123,5 +123,23 @@ router.get('/unread/:receiver', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch unread messages' });
 
     }
+});
+
+router.patch('/mark-read', async (req, res) => {
+    try {
+        const { sender, receiver } = req.body;
+
+        const senderData = await getUserByName(sender);
+        const receiverData = await getUserByName(receiver);
+
+        if (!senderData || !receiverData) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        await pool.query(
+            `UPDATE messages SET is_read = TRUE
+            WHERE sender_id = ?`
+        )
+    }
 })
 export default router
