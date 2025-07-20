@@ -97,4 +97,19 @@ router.delete('/:m_id', async (req, res) => {
 
 })
 
+
+// handle unread backend count
+
+router.get('/unread/:receiver', async (req, res) => {
+    try {
+        const { receiver } = req.params;
+
+        const receiverData = await getUserByName(receiver);
+        if (!receiverData) {
+            return res.status(404).json({ error: 'Receiver not found' });
+        }
+
+        const [rows] = await
+    }
+})
 export default router
