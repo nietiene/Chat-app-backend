@@ -101,32 +101,28 @@ router.delete('/:m_id', async (req, res) => {
 
 
 // handle unread backend count
-
 router.get('/unread/:receiver_id', async (req, res) => {
     try {
         const { receiver_id } = req.params;
 
-        // validate if user(receiver) exists
-        const [user] = await pool.query('SELECT user_id FROM user WHERE user_id = ?', [receiver_id]);
-
-        if (user.length === 0) return res.status(404).json({ error: 'User not found' });
+        const [userRows] = await pool.query('SELECT user_id FROM user WHERE user_id = ?', [receiver_id]);
+        if (userRows.length === 0) return res.status(404).json({ error: 'User not found' });
 
         const [rows] = await pool.query(
             `SELECT sender_id, COUNT(*) AS unread_count
-            FROM messages
-            WHERE receiver_id = ? AND is_read = FALSE AND is_deleted = FALSE
-            GROUP BY sender_id`,
+             FROM messages
+             WHERE receiver_id = ? AND is_read = FALSE AND is_deleted = FALSE
+             GROUP BY sender_id`,
             [receiver_id]
-        )
+        );
 
         res.json(rows);
-        
     } catch (error) {
         console.error('Error fetching unread message', error);
         res.status(500).json({ error: 'Failed to fetch unread messages' });
-
     }
 });
+
 
 // router.patch('/mark-read', async (req, res) => {
 //     try {
