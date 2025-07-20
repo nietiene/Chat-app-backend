@@ -138,8 +138,15 @@ router.patch('/mark-read', async (req, res) => {
 
         await pool.query(
             `UPDATE messages SET is_read = TRUE
-            WHERE sender_id = ?`
-        )
+            WHERE sender_id = ? AND receiver_id = ? AND is_Read = FALSE`,
+            [senderData.user_id, receiverData.user_id]
+        );
+
+        res.json({ message: 'Message marked as read' });
+
+    } catch (error) {
+        console.error('Errror marking messages as read', error);
+        res.status(500).json({ error: 'Failed to update messages' });
     }
 })
 export default router
