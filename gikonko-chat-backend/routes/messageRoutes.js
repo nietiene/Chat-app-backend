@@ -6,6 +6,7 @@ import {
 } from '../models/messageModel.js';
 import { getUserByName } from '../models/userModel.js';
 import pool from '../models/db.js';
+import { error } from 'console';
 
 const router = express.Router();
 
@@ -104,6 +105,10 @@ router.get('/unread/:receiver_id', async (req, res) => {
     try {
         const { receiver_id } = req.params;
 
+        // validate if user(receiver) exists
+        const [user] = await pool.query('SELECT user_id WFROM user WHERE user_id = ?', [receiver_id]);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
         const [rows] = await pool.query(
             `SELECT sender_id, COUNT(*) AS unread_count
             FROM messages
@@ -121,28 +126,28 @@ router.get('/unread/:receiver_id', async (req, res) => {
     }
 });
 
-router.patch('/mark-read', async (req, res) => {
-    try {
-        const { sender, receiver } = req.body;
+// router.patch('/mark-read', async (req, res) => {
+//     try {
+//         const { sender, receiver } = req.body;
 
-        const senderData = await getUserByName(sender);
-        const receiverData = await getUserByName(receiver);
+//         const senderData = await getUserByName(sender);
+//         const receiverData = await getUserByName(receiver);
 
-        if (!senderData || !receiverData) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+//         if (!senderData || !receiverData) {
+//             return res.status(404).json({ error: 'User not found' });
+//         }
 
-        await pool.query(
-            `UPDATE messages SET is_read = TRUE
-            WHERE sender_id = ? AND receiver_id = ? AND is_Read = FALSE`,
-            [senderData.user_id, receiverData.user_id]
-        );
+//         await pool.query(
+//             `UPDATE messages SET is_read = TRUE
+//             WHERE sender_id = ? AND receiver_id = ? AND is_read = FALSE`,
+//             [senderData.user_id, receiverData.user_id]
+//         );
 
-        res.json({ message: 'Message marked as read' });
+//         res.json({ message: 'Message marked as read' });
 
-    } catch (error) {
-        console.error('Errror marking messages as read', error);
-        res.status(500).json({ error: 'Failed to update messages' });
-    }
-})
+//     } catch (error) {
+//         console.error('Errror marking messages as read', error);
+//         res.status(500).json({ error: 'Failed to update messages' });
+//     }
+// })
 export default router
