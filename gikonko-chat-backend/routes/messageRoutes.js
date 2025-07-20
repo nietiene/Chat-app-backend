@@ -103,7 +103,7 @@ router.delete('/:m_id', async (req, res) => {
 // handle unread backend count
 router.get('/unread/:receiver_id', async (req, res) => {
     try {
-        const { receiver_id } = req.params;
+        const receiver_id = req.params;
 
         const [userRows] = await pool.query('SELECT user_id FROM user WHERE user_id = ?', [receiver_id]);
         if (userRows.length === 0) return res.status(404).json({ error: 'User not found' });
