@@ -118,14 +118,19 @@ socket.on('login', async (username) => {
                 [socket.user_id, type, content, g_id]
             );
 
-            io.to(`group_${g_id}`).emit('newGroupMessage', {
+            const message = {
                 g_id,
                 user_id: socket.user_id,
-                sender_name: userInGroup.name,
+                sender_name: socket.username,
                 content,
                 type,
                 created_at: new Date().toISOString()
+            };
+
+            io.to(`group_${g_id}`).emit('newGroupMessage', {
+                message
             });
+            
         } catch (err) {
             console.error('Failed to send group message via socket', err);
         }
