@@ -48,7 +48,7 @@ export async function createGroup(req, res) {
             if (!userRow) throw new Error(`User not found: ${username}`);
 
             if (userRow.user_id !== creator_id) { // avoid duplicated insert
-                
+
                await conn.query(
                    'INSERT INTO group_members (g_id, user_id, joined_at) VALUES(?, ?, NOW())',
                    [g_id, userRow.user_id]
@@ -56,9 +56,12 @@ export async function createGroup(req, res) {
         }
    }
 
+   // save transaction
         await conn.commit();
         res.status(201).json({ message: 'Group created successfully', g_id })
       } catch (error) {
+
+        // rollback or undo if there is any error
         await conn.rollback();
         console.error("Error creating group", error);
         res.status(500).json({ members: 'Failed to create group' });
