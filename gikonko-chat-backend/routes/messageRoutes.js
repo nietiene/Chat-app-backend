@@ -66,7 +66,7 @@ router.delete('/:m_id', async (req, res) => {
     try { // handling errors and avoid server crashes
         const currentUser = req.session.user;
         if (!currentUser || !currentUser.name) {
-            
+
              return res.status(403).json({ message: 'Unauthorized: No session user found' });
         }
         
@@ -79,7 +79,7 @@ router.delete('/:m_id', async (req, res) => {
         const [rows] = await pool.query('SELECT sender_id FROM messages WHERE m_id = ?', [m_id]);
 
         if (rows.length === 0) {
-            return res.status(494).json({ message: 'Message not deleted' })
+            return res.status(404).json({ message: 'Message not deleted' })
         }
         if (rows[0].sender_id !== currentUserData.user_id) {
             return res.status(403).json({ message: 'You can only delete your own message' });
