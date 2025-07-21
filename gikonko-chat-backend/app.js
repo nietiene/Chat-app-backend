@@ -16,7 +16,7 @@ import { getUserByName } from "./models/userModel.js";
 import { setupNotificationService } from "./controllers/notificationController.js";
 import NotificationRoutes from "./routes/notificationRoute.js";
 import SettingRoute from "./routes/SettingRoutes.js";
-import { saveMessage } from "./models/messageModel.js";
+// import { saveMessage } from "./models/messageModel.js";
 import { fileURLToPath } from "url";
 import db from "./models/db.js"
 import path from "path";
