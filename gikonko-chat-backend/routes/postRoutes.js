@@ -35,6 +35,7 @@ router.post("/", uploads.single("image"), async (req, res) => {
            // fetch all parents to notify them
            const [parents] = await db.query("SELECT user_id FROM user WHERE role = 'parent'");
 
+           // send notification to each parent
            for (let parent of parents) {
             await sendNotification({
                 receiver_id: parent.user_id,
