@@ -63,9 +63,10 @@ router.post('/', async (req, res) => {
 router.delete('/:m_id', async (req, res) => {
     const { m_id }  = req.params;
 
-    try {
+    try { // handling errors and avoid server crashes
         const currentUser = req.session.user;
         if (!currentUser || !currentUser.name) {
+            
              return res.status(403).json({ message: 'Unauthorized: No session user found' });
         }
         
