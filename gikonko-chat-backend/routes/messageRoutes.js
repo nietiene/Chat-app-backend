@@ -119,8 +119,9 @@ router.get('/unread', async (req, res) => {
         const results = {}; // maps sender_id to their name
         for (let row of rows) {
             const [userRows] = await pool.query(
-                'SELECT name FROM user'
-            )
+                'SELECT name FROM user WHERE user_id = ?',
+                [row.sender_id]
+            );
         }
         res.json(rows);
     } catch (error) {
