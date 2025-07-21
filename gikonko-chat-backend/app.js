@@ -127,7 +127,7 @@ socket.on('login', async (username) => {
                 created_at: new Date().toISOString()
             };
 
-            io.to(`group_${g_id}`).emit('newGroupMessage', { message });
+            io.to(`group_${g_id}`).emit('newGroupMessage', message);
 
         } catch (err) {
             console.error('Failed to send group message via socket', err);
