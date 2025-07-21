@@ -131,11 +131,9 @@ socket.on('login', async (username) => {
             console.error('Failed to send group message via socket', err);
         }
     })
-
-    users[user_id] = socket.id;
+onl
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
-           console.log('📩 Private message:', { to, content, sender_id });
             const sender = await getUserByName(from);
             const receiver = await getUserByName(to);
             
