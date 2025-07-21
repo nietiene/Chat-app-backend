@@ -125,8 +125,10 @@ router.get('/unread', async (req, res) => {
 
             if (userRows.length > 0) {
                 const senderName = userRows[0].name;
+                results[senderName] = row.unread_count;
             }
         }
+        
         res.json(rows);
     } catch (error) {
         console.error('Error fetching unread message', error);
