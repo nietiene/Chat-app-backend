@@ -76,6 +76,8 @@ router.get("/", async (req, res) => {
            
 })
 
+// fetching posts based of their IDs
+
 router.get('/:id', async (req, res) => {
      const postId = req.params.id;
     try {
