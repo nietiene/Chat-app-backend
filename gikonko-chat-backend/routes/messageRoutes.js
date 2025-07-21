@@ -6,8 +6,6 @@ import {
 } from '../models/messageModel.js';
 import { getUserByName } from '../models/userModel.js';
 import pool from '../models/db.js';
-import { error } from 'console';
-import { json } from 'stream/consumers';
 
 const router = express.Router();
 

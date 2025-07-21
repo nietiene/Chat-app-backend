@@ -16,6 +16,7 @@ import { getUserByName } from "./models/userModel.js";
 import { setupNotificationService } from "./controllers/notificationController.js";
 import NotificationRoutes from "./routes/notificationRoute.js";
 import SettingRoute from "./routes/SettingRoutes.js";
+import { saveMessage } from "./models/messageModel.js";
 import { fileURLToPath } from "url";
 import db from "./models/db.js"
 import path from "path";
@@ -98,6 +99,9 @@ socket.on('login', async (username) => {
                 "SELECT g_id FROM group_members WHERE user_id = ?",
                 [user.user_id]
             );
+
+            userGroups.forEach(g => socket.join(`group_${g.g_id}`));
+            
             console.log(`${username} connected with socket ID: ${socket.id}`);
             io.emit('userList', Object.keys(users));
         }
@@ -107,17 +111,6 @@ socket.on('login', async (username) => {
 });
 
     
-    const userInGroup = socket.request.session.user;
-    if (!userInGroup) return;
-
-    socket.user_id = userInGroup.user_id;
-
-    const [userGroup] = await db.query(
-        `SELECT g_id FROM group_members WHERE user_id = ?`,
-        [userInGroup.user_id]
-    );
-    userGroup.forEach(g => socket.join(`group_${g.g_id}`));
-
     socket.on('groupMessage', async ({ g_id, content, type = 'text'}) => {
         try {
             await db.query(
@@ -148,23 +141,25 @@ socket.on('login', async (username) => {
                 return;
             }
 
+            await saveMessage(sender.user_id, receiver.user_id, message);
+
             const messageData = {
                     from,
+                    to,
                     message,
                     timestamp: new Date()
             }
             // Deliver to recipient if online
             if (users[to]) {
-                io.to(users[to]).emit('privateMessage', messageData);
+                // io.to(users[to]).emit('privateMessage', messageData);
                 io.to(users[to]).emit('unreadMessage', messageData); // new unread event
             }
 
-            // Send confirmation back to sender
-            socket.emit('privateMessage', {
-                from: 'You',
-                message,
-                timestamp: new Date()
-            });
+            if (users[receiver.user_id]) {
+                io.to(users[receiver.user_id]).emit('privateMessage', messageData);
+            }
+
+            socket.emit('privateMessage', {...messageData, from: 'You'})
 
         } catch (error) {
             console.error('Error handling private message:', error);
