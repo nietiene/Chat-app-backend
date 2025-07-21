@@ -113,6 +113,7 @@ export async function getGroupMessages(req, res) {
     try {
         // Verify group membership
         const [membership] = await db.query(
+            // SELECT 1 means to check if there is any matching rows not any name, or id only matching row
             'SELECT 1 FROM group_members WHERE g_id = ? AND user_id = ?',
             [g_id, user_id]
         );
@@ -143,6 +144,7 @@ export async function getGroupMessages(req, res) {
         res.status(500).json({ message: 'Failed to fetch group messages' });
     }
 }
+
 
 export async function sendGroupMessage(req, res) {
 
