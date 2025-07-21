@@ -134,12 +134,9 @@ socket.on('login', async (username) => {
 
     socket.on('privateMessage', async ({ to, content, sender_id }) => {
         try {
-            const sender = await getUserByName(from);
+            const receiver = await getUserByName(to);
             
-            if (!receiver) {
-                console.log('User not found');
-                return;
-            }
+            if (!receiver) return;
 
             const messageData = {
                     from,
