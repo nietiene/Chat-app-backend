@@ -90,6 +90,14 @@ socket.on('login', async (username) => {
         const user = await getUserByName(username);
         if (user) {
             users[user.user_id] = socket.id;
+            socket.user_id = user.user_id;
+            socket.username = username;
+
+            // join all groups 
+            const [userGroups] = await db.query(
+                "SELECT g_id FROM group_members WHERE user_id = ?",
+                [user.user_id]
+            );
             console.log(`${username} connected with socket ID: ${socket.id}`);
             io.emit('userList', Object.keys(users));
         }
@@ -113,7 +121,7 @@ socket.on('login', async (username) => {
     socket.on('groupMessage', async ({ g_id, content, type = 'text'}) => {
         try {
             await db.query(
-                'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, 0, NOW(), ?))',
+                'INSERT INTO group_message (user_id, type, content, is_read, created_at, g_id) VALUES(?, ?, ?, 0, NOW(), ?)',
                 [socket.user_id, type, content, g_id]
             );
 
