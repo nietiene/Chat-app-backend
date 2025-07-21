@@ -146,9 +146,9 @@ socket.on('login', async (username) => {
                     timestamp: new Date()
             }
             // Deliver to recipient if online
-            if (receiver && users[receiver.user_id]) {
-                io.to(users[receiver.user_id]).emit('privateMessage', messageData);
-                io.to(users[receiver.user_id]).emit('unreadMessage', messageData); // new unread event
+            if (users[to]) {
+                io.to(users[to]).emit('privateMessage', messageData);
+                io.to(users[to]).emit('unreadMessage', messageData); // new unread event
             }
 
             // Send confirmation back to sender
