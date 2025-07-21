@@ -77,6 +77,8 @@ setupNotificationService(io, users);
 
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
+    console.log('Registered user:', user_id, 'with socket:', socket.id);
+
 
  socket.on('deletePrivateMessage', ({ m_id }) => {
     io.emit('privateMessageDeleted', { m_id });
@@ -130,8 +132,10 @@ socket.on('login', async (username) => {
         }
     })
 
+    users[user_id] = socket.id;
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
+           console.log('📩 Private message:', { to, content, sender_id });
             const sender = await getUserByName(from);
             const receiver = await getUserByName(to);
             
