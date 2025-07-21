@@ -110,6 +110,13 @@ router.put('/:id/read', async (req, res) => {
 });
 
 router.get('/unread-count', async (req, res) => {
-    
+    const userId = req.session.user.id;
+
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    const [rows] = await pool.query(
+        `SELECT COUNT(*) AS unread_count FROM notification WHERE receiver_id = ? AND is_read = 0`,
+        
+    )
 })
 export default router
