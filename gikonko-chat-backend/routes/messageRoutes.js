@@ -133,6 +133,10 @@ router.patch('/mark-read', async (req, res) => {
 
         const senderId = senderData.user_id;
         const receiverId = senderData.receiver_id;
+        
+        console.log('SenderData:', senderData);
+        console.log('ReceiverData:', receiverData);
+
 
         if (!senderData || !receiverData) {
             return res.status(404).json({ error: 'User not found' });
@@ -150,8 +154,6 @@ router.patch('/mark-read', async (req, res) => {
         console.error('Errror marking messages as read', error);
         res.status(500).json({ error: 'Failed to update messages' });
     }
-
-    console.log('Updating is_read for sender_id:', senderData.user_id, 'receiver_id:', receiverData.user_id);
 
 })
 export default router
