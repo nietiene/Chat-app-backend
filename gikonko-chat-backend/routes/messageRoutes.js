@@ -128,7 +128,7 @@ router.get('/unread', async (req, res) => {
                 results[senderName] = row.unread_count;
             }
         }
-        
+
         res.json(rows);
     } catch (error) {
         console.error('Error fetching unread message', error);
@@ -145,7 +145,7 @@ router.patch('/mark-read', async (req, res) => {
         const receiverData = await getUserByName(receiver);
 
         const senderId = senderData.user_id;
-        const receiverId = senderData.user_id;
+        const receiverId = receiverData.user_id;
 
         console.log('SenderData:', senderData);
         console.log('ReceiverData:', receiverData);
