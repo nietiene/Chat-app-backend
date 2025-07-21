@@ -79,6 +79,12 @@ setupNotificationService(io, users);
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
 
+    //handle joinGroup event
+    socket.on('jojnGroup', (groupId) => {
+        socket.join(`group_${groupId}`);
+        console.log(`Socket ${socket.id} JOINED group_${groupId}`);
+    })
+
  socket.on('deletePrivateMessage', ({ m_id }) => {
     io.emit('privateMessageDeleted', { m_id });
 });
