@@ -107,5 +107,9 @@ router.put('/:id/read', async (req, res) => {
       console.error('Failed to maekr as read', err);
       res.status(500).send('Server error');
     }
+});
+
+router.get('/unread-count', async (req, res) => {
+    
 })
 export default router
