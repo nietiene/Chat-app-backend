@@ -37,7 +37,7 @@ export async function createGroup(req, res) {
             )
 
 
-            // adding member to group
+            // adding members to group
         for (const username of members) {
             // loop through each username in members
             const [[userRow]] = await conn.query(
