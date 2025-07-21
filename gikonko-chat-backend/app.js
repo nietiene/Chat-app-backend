@@ -131,13 +131,12 @@ socket.on('login', async (username) => {
             console.error('Failed to send group message via socket', err);
         }
     })
-onl
-    socket.on('privateMessage', async ({ to, from, message }) => {
+
+    socket.on('privateMessage', async ({ to, content, sender_id }) => {
         try {
             const sender = await getUserByName(from);
-            const receiver = await getUserByName(to);
             
-            if (!sender || !receiver) {
+            if (!receiver) {
                 console.log('User not found');
                 return;
             }
