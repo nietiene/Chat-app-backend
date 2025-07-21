@@ -67,7 +67,7 @@ export async function createGroup(req, res) {
         res.status(500).json({ members: 'Failed to create group' });
 
       } finally {
-        conn.release();
+        conn.release(); // whatever happens the transaction get back to the pool means it changed to normal connection
       }
 }
 
