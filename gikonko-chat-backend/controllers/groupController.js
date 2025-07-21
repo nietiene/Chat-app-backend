@@ -160,7 +160,7 @@ export async function sendGroupMessage(req, res) {
         return res.status(400).json({ message: 'Content is required' });
     }
 
-    const conn = await db.getConnection();
+    const conn = await db.getConnection(); // use conn instead of whole conenction
     try {
         await conn.beginTransaction();
 
