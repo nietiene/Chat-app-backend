@@ -37,6 +37,8 @@ router.get('/group_members/:g_id', async (req, res) => {
     }
 });
 
+//adding user to the group
+
 router.post('/group_members/:g_id', async (req, res) => {
     const groupId = req.params.g_id;
     const { phone } = req.body;
@@ -69,7 +71,7 @@ router.post('/group_members/:g_id', async (req, res) => {
             })
         }
 
-        // check if user was previous member to update instead of insert
+        // check if user was previous member (was already a member) to update instead of insert
         const [previousMember] = await db.query(
             `SELECT * FROM group_members
             WHERE g_id = ? AND user_id = ?`,
@@ -84,6 +86,7 @@ router.post('/group_members/:g_id', async (req, res) => {
                 WHERE g_id = ? AND user_id = ?`,
             [groupId, userId]);
         } else {
+
             await db.query(
             `INSERT INTO group_members (g_id, user_id, joined_at)
             VALUES(?, ?, NOW())`,
@@ -98,6 +101,7 @@ router.post('/group_members/:g_id', async (req, res) => {
     }
 })
 
+// leaving to the group
 router.delete('/group_members/:g_id/:user_id', async (req, res) => {
     const { g_id, user_id } = req.params;
 
@@ -108,16 +112,14 @@ router.delete('/group_members/:g_id/:user_id', async (req, res) => {
         );
         res.json({ succes: true, message: 'Member removed from the group'});
     } catch (error) {
-        console.error('Failed to remove goup', error);
-        res.status(500).json({ error: 'Failed to remvoe member' });
+        console.error('Failed to remove group', error);
+        res.status(500).json({ error: 'Failed to remove member' });
     }
 })
 
 router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     const currentUserId = req.session.user.id;
-
-    console.log(`Delete request: User ${currentUserId} deleting message ${id}`);
 
     try {
         const [messageRows] = await db.query('SELECT user_id, g_id FROM group_messages WHERE id = ?', [id]);
@@ -126,8 +128,10 @@ router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
             return res.status(404).json({ message: 'Message not found'});
         }
 
+        // this line is destructor assignment
         const { g_id: groupId, user_id: messageOwnerId } = messageRows[0];
 
+        // check if current logged in user is member of the group
         const [memberRows] = await db.query(
             'SELECT * FROM group_members WHERE g_id = ? AND user_id = ?',
             [groupId, currentUserId]
@@ -142,6 +146,7 @@ router.delete('/group-messages/:id', isAuthenticated, async (req, res) => {
 
     await db.query('UPDATE group_messages SET is_deleted = TRUE WHERE id = ?', [id]);
 
+    // sends event to the connected group members that message was deleted this helps the frontend to remove message in real time of the screen
     req.app.get('io').emit('groupMessageDeleted', { id });
     
     res.json({ message: 'Message deleted successfully' });
