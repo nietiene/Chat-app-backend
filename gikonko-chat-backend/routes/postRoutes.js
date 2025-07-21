@@ -10,6 +10,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const safeName = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
         cb(null, safeName);
+        // cb() stands for call back is used to confrim success like saving file or throw an error 
     }
 })
 
