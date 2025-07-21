@@ -195,7 +195,7 @@ export async function sendGroupMessage(req, res) {
              FROM group_messages gm
              JOIN user u ON gm.user_id = u.user_id
              WHERE gm.id = ?`,
-            [result.insertId]
+            [result.insertId] // this insertId fetch authomatically primary key value
         );
 
         res.status(201).json(message);
