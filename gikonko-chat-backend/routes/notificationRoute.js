@@ -56,13 +56,13 @@ router.post('/:id/action', async (req, res) => {
         const userId = req.session.user.id;
         const notificationId = req.params.id;
 
+        // fetch if notification exist
         const [notificationRows] = await pool.query(
             `SELECT * FROM notifications WHERE id = ? AND receiver_id = ?`, 
             [notificationId, userId]
         );
 
         const notification = notificationRows[0];
-        console.log('Fetched notification:', notification);
 
         if (!notificationRows.length) {
             return res.status(404).json({ error: 'Notification not found' });
