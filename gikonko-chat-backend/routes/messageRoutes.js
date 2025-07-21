@@ -116,6 +116,7 @@ router.get('/unread', async (req, res) => {
         );
 
         const results = {}; // maps sender_id to their name
+        // here helps to convert the user_id with their name mostly useful
         for (let row of rows) {
             const [userRows] = await pool.query(
                 'SELECT name FROM user WHERE user_id = ?',
@@ -124,7 +125,7 @@ router.get('/unread', async (req, res) => {
 
             if (userRows.length > 0) {
                 const senderName = userRows[0].name;
-                results[senderName] = row.unread_count;
+                results[senderName] = row.unread_count; // here creates key-value pair adding sender_name and their unread counts
             }
         }
 
@@ -145,10 +146,6 @@ router.patch('/mark-read', async (req, res) => {
 
         const senderId = senderData.user_id;
         const receiverId = receiverData.user_id;
-
-        console.log('SenderData:', senderData);
-        console.log('ReceiverData:', receiverData);
-
 
         if (!senderData || !receiverData) {
             return res.status(404).json({ error: 'User not found' });
