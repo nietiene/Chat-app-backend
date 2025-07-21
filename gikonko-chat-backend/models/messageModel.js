@@ -12,10 +12,12 @@ export async function saveMessage(sender_id, receiver_id, content) {
 export async function getMessagesBetweenUsers(user1_id, user2_id) {
     // return only non deleted message
     const [rows] = await db.query(
+        // filter message between user in either directions
         `SELECT m.*, u.name AS sender_name 
          FROM messages m
          JOIN user u ON m.sender_id = u.user_id
          WHERE 
+        
            ((m.sender_id = ? AND m.receiver_id = ?) OR 
             (m.sender_id = ? AND m.receiver_id = ?))
            AND m.is_deleted = FALSE
