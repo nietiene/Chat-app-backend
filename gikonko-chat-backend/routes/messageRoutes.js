@@ -116,6 +116,12 @@ router.get('/unread', async (req, res) => {
             [receiver_id]
         );
 
+        const results = {}; // maps sender_id to their name
+        for (let row of rows) {
+            const [userRows] = await pool.query(
+                'SELECT name FROM user'
+            )
+        }
         res.json(rows);
     } catch (error) {
         console.error('Error fetching unread message', error);
