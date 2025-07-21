@@ -132,8 +132,8 @@ router.patch('/mark-read', async (req, res) => {
         const receiverData = await getUserByName(receiver);
 
         const senderId = senderData.user_id;
-        const receiverId = senderData.receiver_id;
-        
+        const receiverId = senderData.user_id;
+
         console.log('SenderData:', senderData);
         console.log('ReceiverData:', receiverData);
 
