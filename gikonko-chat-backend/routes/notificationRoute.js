@@ -70,8 +70,8 @@ router.post('/:id/action', async (req, res) => {
 
 
         // determine the redirect path based on type of notification
-        let redirectPath = '/';
-        let state = {};
+        let redirectPath = '/'; // default path to redirect the user if the type is not recoginized
+        let state = {}; // object to carry data in react router or frontend
         const notif = notification;
 
         if (notif.type === 'message') {
@@ -81,7 +81,6 @@ router.post('/:id/action', async (req, res) => {
               redirectPath= `/chat/${notif.sender_id}`;
 
         } else if (notif.type === 'New post') {
-
             redirectPath = `/posts/${notif.content}`; // here content is post_id
             
         }
