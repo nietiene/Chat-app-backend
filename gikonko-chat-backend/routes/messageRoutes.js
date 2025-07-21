@@ -122,6 +122,10 @@ router.get('/unread', async (req, res) => {
                 'SELECT name FROM user WHERE user_id = ?',
                 [row.sender_id]
             );
+
+            if (userRows.length > 0) {
+                const senderName = userRows[0].name;
+            }
         }
         res.json(rows);
     } catch (error) {
