@@ -77,7 +77,6 @@ setupNotificationService(io, users);
 
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
-    console.log('Registered user:', user_id, 'with socket:', socket.id);
 
 
  socket.on('deletePrivateMessage', ({ m_id }) => {
@@ -92,7 +91,7 @@ socket.on('login', async (username) => {
         const user = await getUserByName(username);
         if (user) {
             users[user.user_id] = socket.id;
-            console.log(`${username} connected with socket ID: ${socket.id}`);
+            console.log(`Registered user: ${user.user_id} with socket: ${socket.id}`);
             io.emit('userList', Object.keys(users));
         }
     } catch (error) {
@@ -140,22 +139,26 @@ socket.on('login', async (username) => {
 
             const receiverSocketId = users[receiver.user_id];
             if (receiverSocketId) {
-                tio.to(receiverSocketId).emit('privateMessage', {
+                io.to(receiverSocketId).emit('privateMessage', {
                     sender_id,
                     content,
                     created_at: new Date()
                 })
             }
-            const messageData = {
-                    from,
-                    message,
-                    timestamp: new Date()
-            }
-            // Deliver to recipient if online
-            if (users[to]) {
-                io.to(users[to]).emit('unreadMessage', messageData); // new unread event
-            }
 
+                io.to(receiverSocketId).emit('unreadMessage', {
+                    from: sender_id,
+                    message: content,
+                    timestamp: new Date()
+                }); // new unread event
+            
+
+                    // Send confirmation back to sender
+        socket.emit('privateMessage', {
+            from: 'You',
+            message: content,
+            timestamp: new Date()
+        });
         } catch (error) {
             console.error('Error handling private message:', error);
         }
