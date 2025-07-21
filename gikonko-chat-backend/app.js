@@ -138,6 +138,14 @@ socket.on('login', async (username) => {
             
             if (!receiver) return;
 
+            const receiverSocketId = users[receiver.user_id];
+            if (receiverSocketId) {
+                tio.to(receiverSocketId).emit('privateMessage', {
+                    sender_id,
+                    content,
+                    created_at: new Date()
+                })
+            }
             const messageData = {
                     from,
                     message,
@@ -145,16 +153,8 @@ socket.on('login', async (username) => {
             }
             // Deliver to recipient if online
             if (users[to]) {
-                io.to(users[to]).emit('privateMessage', messageData);
                 io.to(users[to]).emit('unreadMessage', messageData); // new unread event
             }
-
-            // Send confirmation back to sender
-            socket.emit('privateMessage', {
-                from: 'You',
-                message,
-                timestamp: new Date()
-            });
 
         } catch (error) {
             console.error('Error handling private message:', error);
