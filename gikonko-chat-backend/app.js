@@ -159,7 +159,7 @@ socket.on('login', async (username) => {
                 io.to(users[receiver.user_id]).emit('privateMessage', messageData);
             }
 
-            socket.emit('privateMessage', {...messageData, from: 'You'})
+            socket.emit('privateMessage', {...messageData, from: 'You'});
 
         } catch (error) {
             console.error('Error handling private message:', error);
