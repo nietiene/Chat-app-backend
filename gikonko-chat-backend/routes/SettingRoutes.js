@@ -67,6 +67,7 @@ router.post('/update', async (req, res) => {
             return res.status(400).json({ message: 'Nothing to update' });
         }
 
+        // slice() it takes string from index 0 but not including last character
         query = query.slice(0, -1); // remove last comma 
         query += ' WHERE user_id = ?';
         values.push(userId);
