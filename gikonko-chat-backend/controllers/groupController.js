@@ -101,9 +101,11 @@ export async function getMyGroup(req, res) {
       }
 }
 export async function getGroupMessages(req, res) {
-    const { g_id } = req.params;
+
+    const { g_id } = req.params; // Get group ID from the URL
     const user_id = req.user?.id || req.session.user?.id; // Handle both auth methods
 
+    // authorization check
     if (!user_id) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -143,7 +145,8 @@ export async function getGroupMessages(req, res) {
 }
 
 export async function sendGroupMessage(req, res) {
-    const { g_id } = req.params;
+
+    const { g_id } = req.params; // here gets group ID from the URL
     const { content, type = 'text' } = req.body;
     const user_id = req.user.id;
 
