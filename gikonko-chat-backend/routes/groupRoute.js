@@ -200,7 +200,6 @@ router.patch('/:g_id/soft-delete', isAuthenticated, async (req, res) => {
 })
 
 router.patch('/rename/:g_id/name', async (req, res) => {
-    console.log("Route hit!");
     
     const { g_id } = req.params;
     const { group_name } = req.body;
@@ -240,18 +239,21 @@ router.patch('/rename/:g_id/name', async (req, res) => {
 
 
 //for handling changing of group photo
-import multer from "multer";
+import multer from "multer"; // middleware for handling multipart data(uploading files);
 import fs from "fs";
 
 // ensure upload folder is exists
 const uploadDir = 'uploads/group';
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+if (!fs.existsSync(uploadDir)) { // check is not folder exist
+    fs.mkdirSync(uploadDir, { recursive: true }); // if is true it create it 
 }
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
+const storage = multer.diskStorage({ // this methods helps to tell multer how to store files
+
+    destination: (req, file, cb) => cb(null, uploadDir), // tells mukter where to save files
+
     filename: (req, file, cb) => {
+        // here it takes original name and replace with - depend on timestamp to avoid conflict
         const safeName = Date.now() + '-' + file.originalname.replace(/\s+/g, '-'); 
         cb(null, safeName)
        }
