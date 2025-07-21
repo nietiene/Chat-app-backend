@@ -10,13 +10,18 @@ export async function register (req, res) {
             if (existingUser) {
                 return res.status(400).json({ message: 'User already exist' });
             }
+
+            // typeof keyword returns data type of given variable
+            // here it is used to prevent error type
   
             if (typeof password !== 'string') {
                 return res.status(400).json({ message: 'password must be a string' });
             }
+            
             await createUser(name, phone, password);
             res.json({ message: 'Registration successfully' });
      } catch (err) {
+
         console.error(err);
         res.status(500).json({ message: 'Server error' });
      }
