@@ -78,7 +78,6 @@ setupNotificationService(io, users);
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
 
-
  socket.on('deletePrivateMessage', ({ m_id }) => {
     io.emit('privateMessageDeleted', { m_id });
 });
@@ -91,7 +90,7 @@ socket.on('login', async (username) => {
         const user = await getUserByName(username);
         if (user) {
             users[user.user_id] = socket.id;
-            console.log(`Registered user: ${user.user_id} with socket: ${socket.id}`);
+            console.log(`${username} connected with socket ID: ${socket.id}`);
             io.emit('userList', Object.keys(users));
         }
     } catch (error) {
@@ -131,34 +130,34 @@ socket.on('login', async (username) => {
         }
     })
 
-    socket.on('privateMessage', async ({ to, content, sender_id }) => {
+    socket.on('privateMessage', async ({ to, from, message }) => {
         try {
+            const sender = await getUserByName(from);
             const receiver = await getUserByName(to);
             
-            if (!receiver) return;
-
-            const receiverSocketId = users[receiver.user_id];
-            if (receiverSocketId) {
-                io.to(receiverSocketId).emit('privateMessage', {
-                    sender_id,
-                    content,
-                    created_at: new Date()
-                })
+            if (!sender || !receiver) {
+                console.log('User not found');
+                return;
             }
 
-                io.to(receiverSocketId).emit('unreadMessage', {
-                    from: sender_id,
-                    message: content,
+            const messageData = {
+                    from,
+                    message,
                     timestamp: new Date()
-                }); // new unread event
-            
+            }
+            // Deliver to recipient if online
+            if (users[to]) {
+                io.to(users[to]).emit('privateMessage', messageData);
+                io.to(users[to]).emit('unreadMessage', messageData); // new unread event
+            }
 
-                    // Send confirmation back to sender
-        socket.emit('privateMessage', {
-            from: 'You',
-            message: content,
-            timestamp: new Date()
-        });
+            // Send confirmation back to sender
+            socket.emit('privateMessage', {
+                from: 'You',
+                message,
+                timestamp: new Date()
+            });
+
         } catch (error) {
             console.error('Error handling private message:', error);
         }
