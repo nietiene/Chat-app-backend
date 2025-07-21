@@ -11,8 +11,8 @@ export async function createGroup(req, res) {
         return res.status(400).json({ message: 'Invalid group data' });
       }
 
-      const conn = await db.getConnection();
-      await conn.beginTransaction();
+      const conn = await db.getConnection(); // make reusable connection mostly used to handle mulitiple queries together
+      await conn.beginTransaction(); // start transaction which is way of group multiple database actions together  used when you want to insert multiple tables, update multiple rows
 
       try {
         const [groupResult] = await conn.query(
@@ -65,7 +65,7 @@ export async function createGroup(req, res) {
         await conn.rollback();
         console.error("Error creating group", error);
         res.status(500).json({ members: 'Failed to create group' });
-        
+
       } finally {
         conn.release();
       }
