@@ -262,6 +262,7 @@ const storage = multer.diskStorage({ // this methods helps to tell multer how to
 const upload = multer({ storage });
 
 router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('photo'), async (req, res) => {
+    // upload.single() -> handles single file upload
     const { g_id } = req.params;
     const userId = req.session.user.id;
 
@@ -282,6 +283,7 @@ router.patch('/change-group-photo/:g_id/photo', isAuthenticated, upload.single('
             return res.status(400).json({ message: 'No photo uploaded' });
         }
 
+        // save a new photo path
         const photoPath = `/uploads/group/${req.file.filename}`;
         await db.query('UPDATE groups SET group_photo = ? WHERE g_id = ?', [photoPath, g_id]);
 
