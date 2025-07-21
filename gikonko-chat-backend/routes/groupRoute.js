@@ -245,7 +245,7 @@ import fs from "fs";
 // ensure upload folder is exists
 const uploadDir = 'uploads/group';
 if (!fs.existsSync(uploadDir)) { // check is not folder exist
-    fs.mkdirSync(uploadDir, { recursive: true }); // if is true it create it 
+    fs.mkdirSync(uploadDir, { recursive: true }); // if is true it create it recursive means create folder if parent folder exist means if only uploads folder exist
 }
 
 const storage = multer.diskStorage({ // this methods helps to tell multer how to store files
