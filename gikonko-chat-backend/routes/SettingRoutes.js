@@ -38,11 +38,13 @@ router.post('/update', async (req, res) => {
         let query = 'UPDATE user SET ';
         const values = [];
 
+        // if name is exist add it to the sql query and their value
         if (name) {
             query += ' name = ?,';
             values.push(name);
         }
 
+        // also here
         if (phone) {
             query += ' phone = ?,';
             values.push(phone);
@@ -60,8 +62,6 @@ router.post('/update', async (req, res) => {
             query += ' password = ?,';
             values.push(hashedPassword);
         }
-
-        // remove trailing comma
 
         if (values.length === 0) {
             return res.status(400).json({ message: 'Nothing to update' });
