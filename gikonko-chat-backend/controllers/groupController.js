@@ -1,10 +1,13 @@
 import db from "../models/db.js";
 
 export async function createGroup(req, res) {
+
+    // here name stands ofr group name and members is array of usernames to add
       const { name, members } = req.body;
       const created_by = req.user.name;
 
       if (!name || !Array.isArray(members) || members.length === 0) {
+        // this validate if group contain name, and members is arrays and contain members
         return res.status(400).json({ message: 'Invalid group data' });
       }
 
