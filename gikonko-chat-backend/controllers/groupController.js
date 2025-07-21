@@ -20,8 +20,9 @@ export async function createGroup(req, res) {
         [name, req.session.user.id]
         );
 
-        const g_id = groupResult.insertId;
+        const g_id = groupResult.insertId; // fetch a group_id 
 
+        //fetch id of group creator to insert him/ her in database
         const [[creatorRow]] = await conn.query(
             'SELECT user_id FROM user WHERE name = ?',
             [created_by]
@@ -34,7 +35,11 @@ export async function createGroup(req, res) {
                 'INSERT INTO group_members (g_id, user_id, joined_at) VALUES(?, ?, NOW())',
                 [g_id, creator_id]
             )
+
+
+            // adding member to group
         for (const username of members) {
+            // loop through each username in members
             const [[userRow]] = await conn.query(
                 'SELECT user_id FROM user WHERE name = ?',
                 [username]
@@ -43,6 +48,7 @@ export async function createGroup(req, res) {
             if (!userRow) throw new Error(`User not found: ${username}`);
 
             if (userRow.user_id !== creator_id) { // avoid duplicated insert
+                
                await conn.query(
                    'INSERT INTO group_members (g_id, user_id, joined_at) VALUES(?, ?, NOW())',
                    [g_id, userRow.user_id]
