@@ -65,6 +65,7 @@ export async function createGroup(req, res) {
         await conn.rollback();
         console.error("Error creating group", error);
         res.status(500).json({ members: 'Failed to create group' });
+        
       } finally {
         conn.release();
       }
