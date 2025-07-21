@@ -13,6 +13,7 @@ router.get('/', async (req, res) => {
         const userId = req.session.user.id;
 
         const [rows] = await pool.query(
+            // LEFT JOIN returns mathcing rows if sender_id and notification_id is match else if sender_id is not availablr it returns only the notification columns 
             `SELECT n.*, u.name AS sender_name, u.profile_image AS sender_profile_image
             FROM notifications n
             LEFT JOIN user u ON n.sender_id = u.user_id
