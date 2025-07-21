@@ -116,7 +116,7 @@ router.get('/unread-count', async (req, res) => {
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
     const [rows] = await pool.query(
-        `SELECT COUNT(*) AS unread_count FROM notification WHERE receiver_id = ? AND is_read = 0`,
+        `SELECT COUNT(*) AS unread_count FROM notifications WHERE receiver_id = ? AND is_read = 0`,
         [userId]
     );
 
