@@ -110,6 +110,7 @@ router.put('/:id/read', async (req, res) => {
 });
 
 router.get('/unread-count', async (req, res) => {
+ try {
     const userId = req.session.user.id;
 
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
@@ -120,6 +121,11 @@ router.get('/unread-count', async (req, res) => {
     );
 
     res.json({ unread_count: rows[0].unread_count });
-    
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Server error' });
+    }
+
 })
 export default router
