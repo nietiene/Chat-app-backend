@@ -132,7 +132,7 @@ router.patch('/mark-read', async (req, res) => {
         const receiverData = await getUserByName(receiver);
 
         const senderId = senderData.user_id;
-        const receiverId = senderData.receiverId;
+        const receiverId = senderData.receiver_id;
 
         if (!senderData || !receiverData) {
             return res.status(404).json({ error: 'User not found' });
