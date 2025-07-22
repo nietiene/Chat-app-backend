@@ -17,7 +17,7 @@ import { setupNotificationService } from "./controllers/notificationController.j
 import NotificationRoutes from "./routes/notificationRoute.js";
 import SettingRoute from "./routes/SettingRoutes.js";
 // import { saveMessage } from "./models/messageModel.js";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "url"; // convert file url to regural system path
 import db from "./models/db.js"
 import path from "path";
 
