@@ -42,7 +42,7 @@ try {
        INSERT INTO notifications (receiver_id, sender_id, type, content, is_read, created_at)
        VALUES(?, ?, ?, ?, ?, NOW())`;
 
-    req.session.user.profile_image = req.file.filename;
+    req.session.user.profile_image = req.file.filename; // update the session to new image
 
     // use simple for loop
     for (const user of users) {
