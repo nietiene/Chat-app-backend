@@ -74,8 +74,8 @@ const __filename = fileURLToPath(import.meta.url);
 // gets the only directory of the file
 const __dirname = path.dirname(__filename);
 
-app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group')));
-app.set('io', io);
+app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group'))); // initialize group folder to be used in express
+app.set('io', io); // set up socket.IO server
 
 const users = {};
 
