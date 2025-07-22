@@ -122,6 +122,7 @@ socket.on('login', async (username) => {
         if (user) {
             //we'll map user_id with their socket id to be used in private message
             users[user.user_id] = socket.id;
+            // assigning user information to their socket
             socket.user_id = user.user_id;
             socket.username = username;
 
