@@ -220,9 +220,13 @@ socket.on('login', async (username) => {
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
         // Remove user from connections
+        //loop that through each  username and id Object.keys() // convert users into key-value pair
         for (const [username, id] of Object.entries(users)) {
+            // if id matches to socket id 
             if (id === socket.id) {
+                // remove username from connected users
                 delete users[username];
+                // here sends update to all connected users
                 io.emit('userList', Object.keys(users));
                 break;
             }
