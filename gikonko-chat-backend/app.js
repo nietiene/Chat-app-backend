@@ -77,8 +77,10 @@ const __dirname = path.dirname(__filename);
 app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group'))); // initialize group folder to be used in express
 app.set('io', io); // set up socket.IO server
 
+// empty object to track connected users like mapping their user_id and their socket_id
 const users = {};
 
+// setup notification to deal with real time notification
 setupNotificationService(io, users);
 
 io.on('connection', async (socket) => {
