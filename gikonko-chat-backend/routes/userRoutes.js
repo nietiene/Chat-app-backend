@@ -44,7 +44,7 @@ try {
 
     req.session.user.profile_image = req.file.filename; // update the session to new image
 
-    // use simple for loop
+    // use simple for loop to notify all other users
     for (const user of users) {
         await db.query(notificationSql, [
             user.user_id, // receiver_id
