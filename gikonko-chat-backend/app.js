@@ -48,14 +48,15 @@ const sessionMiddleware = (session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { 
-        secure: false,
-        httpOnly: true,
-        sameSite: "lax"
+    cookie: { // defines cookies stored in user's browser
+        secure: false, // it is sent over http or https
+        httpOnly: true, // helps to proctect against XSS
+        sameSite: "lax" // prevent CSRF
      }
 }));
 app.use(sessionMiddleware);
 
+// this allows to use Express middleware inside the socket.IO
 const warp = middleware => (socket, next) => middleware(socket.request, {}, next);
 io.use(warp(sessionMiddleware));
 
