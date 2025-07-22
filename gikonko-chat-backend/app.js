@@ -83,6 +83,8 @@ const users = {};
 // setup notification to deal with real time notification
 setupNotificationService(io, users);
 
+//socket -? individual socket connection
+//io.on('connection', callback)
 io.on('connection', async (socket) => {
     console.log('New client connected:', socket.id);
 
