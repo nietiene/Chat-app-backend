@@ -163,6 +163,7 @@ socket.on('login', async (username) => {
                 created_at: new Date().toISOString()
             };
 
+            // this line sends new message to al client connects to socket and belongs to that group
             io.to(`group_${g_id}`).emit('newGroupMessage', message);
 
         } catch (err) {
