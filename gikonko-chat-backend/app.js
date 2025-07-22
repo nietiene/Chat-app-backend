@@ -153,6 +153,7 @@ socket.on('login', async (username) => {
                 [socket.user_id, type, content, g_id]
             );
 
+            // create a message object that will be sent to all group members
             const message = {
                 g_id,
                 user_id: socket.user_id,
