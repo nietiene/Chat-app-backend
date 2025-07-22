@@ -118,7 +118,9 @@ socket.on('login', async (username) => {
     try {
         // check if user in in database using their username
         const user = await getUserByName(username);
+        // if user exists
         if (user) {
+            //we'll map user_id with their socket id to be used in private message
             users[user.user_id] = socket.id;
             socket.user_id = user.user_id;
             socket.username = username;
