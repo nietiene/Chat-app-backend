@@ -126,15 +126,17 @@ socket.on('login', async (username) => {
             socket.user_id = user.user_id;
             socket.username = username;
 
-            // join all groups 
+            // this query gets all groups user belongs for
             const [userGroups] = await db.query(
                 "SELECT g_id FROM group_members WHERE user_id = ?",
                 [user.user_id]
             );
 
+            //
             userGroups.forEach(g => socket.join(`group_${g.g_id}`));
             
             console.log(`${username} connected with socket ID: ${socket.id}`);
+            // this used for showing online users or provide list of user_id currently online
             io.emit('userList', Object.keys(users));
         }
     } catch (error) {
