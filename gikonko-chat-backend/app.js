@@ -132,7 +132,8 @@ socket.on('login', async (username) => {
                 [user.user_id]
             );
 
-            //
+            //this is loop that through each group user belongs for and join user with their socket rooms
+            // this is usefull to user to receive message in real time
             userGroups.forEach(g => socket.join(`group_${g.g_id}`));
             
             console.log(`${username} connected with socket ID: ${socket.id}`);
