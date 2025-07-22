@@ -57,6 +57,7 @@ const sessionMiddleware = (session({
 app.use(sessionMiddleware);
 
 // this allows to use Express middleware inside the socket.IO
+// helps to take middleware and translate it to function for Socket.IO
 const warp = middleware => (socket, next) => middleware(socket.request, {}, next);
 io.use(warp(sessionMiddleware)); // tells the socket.IO to use session while user is connected via WebSocket
 
