@@ -111,8 +111,12 @@ io.on('connection', async (socket) => {
 socket.on('deleteGroupMessage', ({ id }) => {
     io.emit('groupMessageDeleted', { id });
 });
+
+// listen to login event from the client and then the client sends a username 
+// async function wail a database call
 socket.on('login', async (username) => {
     try {
+        // check if user in in database using their username
         const user = await getUserByName(username);
         if (user) {
             users[user.user_id] = socket.id;
