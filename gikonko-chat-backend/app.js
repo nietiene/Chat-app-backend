@@ -194,12 +194,17 @@ socket.on('login', async (username) => {
                     timestamp: new Date()
             }
             // Deliver to recipient if online
+            // if recipient is online 
             if (users[to]) {
                 // io.to(users[to]).emit('privateMessage', messageData);
+                // deliver event of  unread message with message info 
                 io.to(users[to]).emit('unreadMessage', messageData); // new unread event
             }
+            
 
+            // this it is tries to send private message using receiver id
             if (users[receiver.user_id]) {
+                // if user_id available sends message immedialtely
                 io.to(users[receiver.user_id]).emit('privateMessage', messageData);
             }
 
