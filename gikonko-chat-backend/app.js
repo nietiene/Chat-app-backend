@@ -174,6 +174,7 @@ socket.on('login', async (username) => {
     // listen to private message event and we'll send to -> recipient username, from -> sender username, message -> message content
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
+            // check if all users are available
             const sender = await getUserByName(from);
             const receiver = await getUserByName(to);
             
@@ -182,8 +183,10 @@ socket.on('login', async (username) => {
                 return;
             }
 
+            // save message to the database
             await saveMessage(sender.user_id, receiver.user_id, message);
 
+            // create object for sending data to the client
             const messageData = {
                     from,
                     to,
