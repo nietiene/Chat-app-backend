@@ -208,6 +208,7 @@ socket.on('login', async (username) => {
                 io.to(users[receiver.user_id]).emit('privateMessage', messageData);
             }
 
+            // here message send back to the sneder_socket but replace from to you
             socket.emit('privateMessage', {...messageData, from: 'You'});
 
         } catch (error) {
@@ -215,6 +216,7 @@ socket.on('login', async (username) => {
         }
     });
 
+    // when the client disconnects or logged out this event will be called
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
         // Remove user from connections
