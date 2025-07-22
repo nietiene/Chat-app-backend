@@ -94,7 +94,8 @@ io.on('connection', async (socket) => {
 
     // set up joinGroup event, groupId is sent from frontend and represent the ID of group user want to join
     socket.on('joinGroup', (groupId) => {
-        
+        // is like when client say to join group we do this
+        // .join() allows to join socket room-> is where message can sent to all users who are member of that group
         socket.join(`group_${groupId}`);
         console.log(`Socket ${socket.id} JOINED group_${groupId}`);
     })
