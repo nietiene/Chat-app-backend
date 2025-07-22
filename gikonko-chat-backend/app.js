@@ -103,6 +103,8 @@ io.on('connection', async (socket) => {
 
     // listen to client with deletePrivateMessage event, m_id is message to be deleted
  socket.on('deletePrivateMessage', ({ m_id }) => {
+    // this tells every one connected to the socket that message was deleted
+    // .emit() is used to send an event
     io.emit('privateMessageDeleted', { m_id });
 });
 
