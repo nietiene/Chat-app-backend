@@ -171,6 +171,7 @@ socket.on('login', async (username) => {
         }
     })
 
+    // listen to private message event and we'll send to -> recipient username, from -> sender username, message -> message content
     socket.on('privateMessage', async ({ to, from, message }) => {
         try {
             const sender = await getUserByName(from);
