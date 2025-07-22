@@ -69,8 +69,11 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/notifications', NotificationRoutes);
 app.use('/api/settings', SettingRoute);
 
+// gives full absolute path of current file eg: /users/etiene/project/app.js
 const __filename = fileURLToPath(import.meta.url);
+// gets the only directory of the file
 const __dirname = path.dirname(__filename);
+
 app.use('/uploads/group', express.static(path.join(__dirname, 'uploads/group')));
 app.set('io', io);
 
