@@ -100,6 +100,8 @@ io.on('connection', async (socket) => {
         console.log(`Socket ${socket.id} JOINED group_${groupId}`);
     })
 
+
+    // listen to client with deletePrivateMessage event, m_id is message to be deleted
  socket.on('deletePrivateMessage', ({ m_id }) => {
     io.emit('privateMessageDeleted', { m_id });
 });
