@@ -41,7 +41,7 @@ const io = new Server(server, {
 
 
 app.use(express.json());
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'))); // avoid issue in paths, give access to your working directory 
 
 
 const sessionMiddleware = (session({
