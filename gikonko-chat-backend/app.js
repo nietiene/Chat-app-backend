@@ -84,12 +84,17 @@ const users = {};
 setupNotificationService(io, users);
 
 //socket -? individual socket connection
-//io.on('connection', callback)
+//io.on('connection', callback) is built-in socket.IO methood that runs when new client connects to the server
 io.on('connection', async (socket) => {
+    // logs new client with their unique socket id
     console.log('New client connected:', socket.id);
 
     //handle joinGroup event
-    socket.on('jojnGroup', (groupId) => {
+    // events are like heart of communication btn client and server allow real-time, two way messaging ..
+
+    // set up joinGroup event, groupId is sent from frontend and represent the ID of group user want to join
+    socket.on('joinGroup', (groupId) => {
+        
         socket.join(`group_${groupId}`);
         console.log(`Socket ${socket.id} JOINED group_${groupId}`);
     })
